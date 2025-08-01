@@ -122,10 +122,10 @@ Create consistent data models based on `local/wave_backend/schemas/` and `local/
 Following the UV patterns from the backend Makefile:
 
 **Tasks:**
-- [ ] Set up `python/pyproject.toml` with UV configuration and Python 3.12 requirement
-- [ ] Create virtual environment management scripts
-- [ ] Set up testing framework (pytest) with proper coverage
-- [ ] Configure linting (black, isort, flake8, pylint) matching backend patterns
+- [x] Set up `python/pyproject.toml` with UV configuration and Python 3.12 requirement
+- [x] Create virtual environment management scripts
+- [x] Set up testing framework (pytest) with proper coverage
+- [x] Configure linting (black, isort, flake8, pylint) matching backend patterns
 - [ ] Add pandas and httpx as dependencies (async HTTP client + DataFrame conversion)
 
 ### 3.2 Core Architecture

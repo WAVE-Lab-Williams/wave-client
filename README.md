@@ -49,12 +49,47 @@ print(data.head())
 ### For Data Analysis (Python)
 
 #### Install from GitHub Releases (Recommended)
-```bash
-# Install latest version
-pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
 
-# Or with uv (faster)
+**Step 1: Install uv**
+First, install [uv](https://docs.astral.sh/uv/getting-started/installation/#installing-uv) (a fast Python package manager) by following the official installation instructions.
+
+**Step 2: Create a new Python project**
+```bash
+# Create and initialize a new Python project
+uv init my-wave-analysis
+cd my-wave-analysis
+
+# Add the WAVE client to your project
 uv add https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
+```
+
+**Step 3: Use your environment**
+
+Choose one of these options:
+
+**Option A: Run Python scripts**
+```bash
+# Run your analysis script
+uv run python my_analysis.py
+```
+
+**Option B: Use in VS Code notebooks**
+1. Open VS Code in your project folder: `code .`
+2. Create a new Jupyter notebook (`.ipynb` file)
+3. When prompted to select a kernel, choose the Python interpreter from your `my-wave-analysis` folder
+4. The kernel will be something like `Python 3.x.x ('.venv': venv) ./venv/bin/python`
+
+**Option C: Activate the virtual environment**
+```bash
+# Activate the environment for interactive use
+source .venv/bin/activate  # On macOS/Linux
+# or
+.venv\Scripts\activate     # On Windows
+
+# Now you can use python directly
+python
+>>> from wave_client import WaveClient
+>>> # Your analysis code here...
 ```
 
 #### Install from Source (Development)
@@ -79,19 +114,49 @@ uv pip install -e .[dev,test]
 If you want to modify the clients locally, you'll need Node.js and Python:
 
 ```bash
-# Install Node.js via nvm (recommended)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-nvm use             # Uses version from .nvmrc (Node.js 20 LTS)
+# Install nvm - follow the instructions at:
+# https://github.com/nvm-sh/nvm
 
-# Set up the project
+# Install and use the project's specified Node.js version (from .nvmrc)
+nvm use             # This reads .nvmrc and installs/uses Node.js 20 LTS
+
+# Set up the complete development environment
 make setup-local-dev
+```
+
+### Development Commands
+
+```bash
+# Setup and building
+make setup-local-dev    # Complete environment setup (Python + JS + git hooks)
+make setup-js          # JavaScript dependencies only
+make setup             # Python environment + JS dependencies
+
+# Testing
+make test-small        # Fast tests (Python small + JS)
+make test-all          # All tests (Python + JS)
+make test-python-small # Python tests only (small subset)
+make test-python-all   # All Python tests
+
+# Code quality
+make format           # Format all code (Python + JS)
+make format-python    # Python formatting (isort, black, flake8, pylint)
+make format-js        # JavaScript formatting
+make ci               # Full CI pipeline (format + test-all)
+
+# Building
+make build-js         # Build JavaScript distribution files
+make build-js-watch   # Build JS with auto-rebuild on changes
+
+# Cleanup
+make clean           # Remove build artifacts, cache files, etc.
 ```
 
 ## More Help
 
-- [Installation Guide](docs/installation.md) - Detailed setup instructions
-- [Examples](docs/examples.md) - Example experiments and analysis
-- [API Reference](docs/api-reference.md) - Complete documentation
+- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
+- [Examples](docs/examples.md) - Working examples of experiments and data analysis
+- [API Reference](docs/api-reference.md) - Complete method documentation
 
 Need help? Contact Prof. Kim Wong.
 
