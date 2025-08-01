@@ -13,12 +13,13 @@ export class WaveClient {
     /**
      * Log experiment data
      * @param {string} experimentId - The experiment ID
-     * @param {string} participantId - The participant ID  
+     * @param {string} participantId - The participant ID
      * @param {Object} data - The experiment data to log
      * @returns {Promise<string>} Success message
      */
     async logData(experimentId, participantId, data) {
         // Placeholder implementation
+        console.log('Data to log:', data);
         return `Logged data for experiment ${experimentId}, participant ${participantId}`;
     }
 }
