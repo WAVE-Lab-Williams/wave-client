@@ -15,12 +15,12 @@
     </div>
 
     <script type="module">
-        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/wave-lab/wave-client@latest/javascript/dist/wave-client.esm.js';
-        
+        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+
         const client = new WaveClient();
         const experimentId = 'your-experiment-id';
         const participantId = 'participant-001';
-        
+
         window.recordResponse = async function(response) {
             await client.logData(experimentId, participantId, {
                 response: response,
@@ -28,7 +28,7 @@
                 trial_number: 1
             });
         }
-        
+
         const startTime = Date.now();
     </script>
 </body>
@@ -83,4 +83,14 @@ print(f"Total data points: {len(combined_data)}")
 results = combined_data.groupby('experiment_name')['reaction_time'].mean()
 print("Average reaction time by experiment:")
 print(results)
+```
+
+## Installation Notes
+
+**JavaScript**: Replace `v1.0.0` in the CDN URL with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases).
+
+**Python**: Install the latest version:
+```bash
+# Find the latest .whl file on the releases page and install:
+pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
 ```

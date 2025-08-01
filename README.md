@@ -14,10 +14,10 @@ Add this to your HTML experiment:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/wave-lab/wave-client@latest/javascript/dist/wave-client.esm.js';
-  
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+
   const client = new WaveClient();  // Uses WAVE_API_KEY and WAVE_API_URL from environment
-  
+
   // Save data from your experiment
   await client.logData(experimentId, participantId, {
     reaction_time: 1.23,
@@ -26,6 +26,8 @@ Add this to your HTML experiment:
   });
 </script>
 ```
+
+> **💡 Tip**: Replace `v1.0.0` with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases)
 
 ## For Analyzing Data (Python)
 
@@ -39,16 +41,42 @@ data = client.get_experiment_data(experiment_id)
 print(data.head())
 ```
 
-## Setup
+## Installation
+
+### For Experiments (JavaScript)
+**No installation needed!** Just use the CDN link above.
+
+### For Data Analysis (Python)
+
+#### Install from GitHub Releases (Recommended)
+```bash
+# Install latest version
+pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
+
+# Or with uv (faster)
+uv add https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
+```
+
+#### Install from Source (Development)
+```bash
+# Clone and install in development mode
+git clone https://github.com/WAVE-Lab-Williams/wave-client.git
+cd wave-client
+uv pip install -e .[dev,test]
+```
+
+> **💡 Find the latest version**: Check our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases) for the newest `.whl` file
+
+## Environment Setup
 
 1. **Get credentials** from Prof. Kim Wong (API key and backend URL)
-2. **Set environment variables**: Copy `.env.example` to `.env` and fill in your values
-3. **For experiments**: Copy the JavaScript code above (Vercel will handle the environment variables)
-4. **For analysis**: Install Python client: `uv add git+https://github.com/wave-lab/wave-client.git` (or `pip install git+https://github.com/wave-lab/wave-client.git`)
+2. **Set environment variables**:
+   - **For experiments**: Add `WAVE_API_KEY` and `WAVE_API_URL` to your Vercel environment variables
+   - **For analysis**: Copy `.env.example` to `.env` and fill in your values
 
-### For Developers
+## For Developers
 
-If you want to modify the JavaScript client locally, you'll need Node.js and npm:
+If you want to modify the clients locally, you'll need Node.js and Python:
 
 ```bash
 # Install Node.js via nvm (recommended)

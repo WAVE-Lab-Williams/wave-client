@@ -9,8 +9,9 @@ Create a dual-language client library (JavaScript + Python) for the WAVE Backend
 ### Technology Stack
 - **JavaScript**: Pure ES6 (no TypeScript), ES6 modules + UMD builds for browser compatibility, **experiment data logging only**
 - **Python**: Python 3.12 with UV package manager, type hints with runtime validation, pandas integration
-- **Installation**: GitHub-based installation (internal distribution, no npm/PyPI)
-- **Frontend Integration**: Direct browser usage, jsPsych compatibility, Git submodule support
+- **Distribution**: GitHub Releases with built assets (JavaScript files + Python wheels), jsDelivr CDN integration
+- **Installation**: Release-based distribution (internal tool, no npm/PyPI publishing)
+- **Frontend Integration**: Direct browser usage via CDN, jsPsych compatibility
 - **Authentication**: Environment variable-based API keys for both clients (role automatically verified)
 
 ### Reference Materials
@@ -25,6 +26,27 @@ The backend already implements lightweight version compatibility checking:
 - **Non-blocking**: Server logs warnings for incompatible versions but allows requests
 - **Endpoint**: `/version` provides compatibility information
 - **Middleware**: Automatic header processing and logging for all requests
+
+## Distribution Strategy
+
+### GitHub Releases Approach
+For this internal research tool, we use **GitHub Releases** instead of public package repositories:
+
+**JavaScript Distribution:**
+- Built files (ESM, UMD, minified) attached to GitHub releases
+- Served via jsDelivr CDN: `https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js`
+- No npm publishing required - keeps tool internal to lab
+
+**Python Distribution:**
+- Python wheels (.whl) attached to GitHub releases
+- Direct installation: `pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl`
+- No PyPI publishing required - maintains internal access control
+
+**Release Workflow:**
+1. Developer runs: `make release VERSION=v1.0.0`
+2. GitHub Actions builds and attaches assets automatically
+3. Users reference specific versions in their code
+4. jsDelivr serves JavaScript files directly from GitHub releases
 
 ---
 
@@ -236,12 +258,17 @@ javascript/
 - [ ] **Examples Library**: Real-world usage examples
 - [ ] **jsPsych Integration Guide**: Specific integration patterns
 
-### 6.2 GitHub Distribution Setup
+### 6.2 GitHub Release Distribution Setup
 **Tasks:**
-- [ ] Set up GitHub releases with semantic versioning
-- [ ] Configure jsDelivr CDN access for JavaScript files
-- [ ] Create installation documentation for Git submodule usage
-- [ ] Set up automated release processes
+- [ ] Create GitHub Actions workflow for automated releases (`.github/workflows/release.yml`)
+  - [ ] Build JavaScript files (ESM, UMD, minified) on tag push
+  - [ ] Build Python wheel (.whl) files
+  - [ ] Attach built assets to GitHub releases
+  - [ ] Support semantic versioning (v1.0.0 format)
+- [ ] Configure jsDelivr CDN access via GitHub releases
+  - [ ] JavaScript: `https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js`
+  - [ ] Python: `https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl`
+- [ ] Test the complete release workflow:
 
 ### 6.3 Maintenance & Support
 - [ ] Create issue templates for bug reports and feature requests

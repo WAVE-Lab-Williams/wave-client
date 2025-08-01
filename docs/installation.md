@@ -2,24 +2,47 @@
 
 ## For Running Experiments (JavaScript)
 
-### Quick Start
+### Quick Start (Recommended)
 Just copy this into your HTML experiment - no installation needed:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/wave-lab/wave-client@latest/javascript/dist/wave-client.esm.js';
-  
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+
   const client = new WaveClient();
   // Your experiment code here
 </script>
 ```
 
-### If You Need Local Files
-If you can't use the CDN, download the files:
+**Important:** Replace `v1.0.0` with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases).
 
-```bash
-git clone https://github.com/wave-lab/wave-client.git
-# Use javascript/dist/wave-client.umd.js in your HTML
+### Alternative: Specific Version from Releases
+For more control, download specific release files:
+
+```html
+<!-- Option 1: ES6 Module (recommended for modern browsers) -->
+<script type="module">
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+</script>
+
+<!-- Option 2: UMD for older browsers -->
+<script src="https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.umd.js"></script>
+<script>
+  const client = new WaveClient.WaveClient();
+</script>
+```
+
+### Local Files (If CDN Unavailable)
+Download from the [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases):
+
+1. Go to the latest release
+2. Download `wave-client-js-v1.0.0.zip`
+3. Extract and use the files in your HTML:
+
+```html
+<script type="module">
+  import { WaveClient } from './wave-client.esm.js';
+</script>
 ```
 
 ### For JavaScript Developers
@@ -57,7 +80,7 @@ Once you have Node.js and npm installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/wave-lab/wave-client.git
+git clone https://github.com/WAVE-Lab-Williams/wave-client.git
 cd wave-client
 
 # Set up both Python and JavaScript environments
@@ -78,17 +101,35 @@ make build-js-watch
 
 ## For Data Analysis (Python)
 
-### Install the Python Client
+### Install from GitHub Releases (Recommended)
+
+Download the pre-built package from our releases:
 
 ```bash
-# Recommended: using uv (fast and reliable)
-uv add git+https://github.com/wave-lab/wave-client.git
+# Option 1: Using pip
+pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
 
-# Alternative: using pip
-pip install git+https://github.com/wave-lab/wave-client.git
+# Option 2: Using uv (faster)
+uv add https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
 ```
 
+**Note:** Replace `1.0.0` with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases).
+
 Don't have `uv`? [Install it here](https://docs.astral.sh/uv/getting-started/installation/) - it's much faster than pip.
+
+### Install from Source (Development)
+
+If you want to modify the Python client or use the latest unreleased features:
+
+```bash
+# Clone and install in development mode
+git clone https://github.com/WAVE-Lab-Williams/wave-client.git
+cd wave-client
+uv pip install -e .[dev,test]
+
+# Or with pip
+pip install -e .[dev,test]
+```
 
 ### Set Up Your Environment Variables
 
@@ -104,11 +145,11 @@ You can copy `.env.example` to `.env` and fill in your values.
 
 **JavaScript not working?** Make sure you're using `type="module"` in your script tag.
 
-**Python import error?** Make sure you installed it: `uv add git+https://github.com/wave-lab/wave-client.git`
+**Python import error?** Make sure you installed it from the releases page or run `uv add https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl`
 
 **API key issues?** Contact Prof. Kim Wong to get your key.
 
-**npm/Node.js issues?** 
+**npm/Node.js issues?**
 - Make sure you've restarted your terminal after installing nvm
 - Run `nvm use node` to activate the latest Node.js version
 - Check that `node --version` and `npm --version` both work
