@@ -1,0 +1,76 @@
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Python formatting and linting (using local configs)
+  - repo: local
+    hooks:
+      - id: python-black
+        name: black (Python)
+        entry: uv run black
+        language: system
+        files: ^python/.*\.py$
+        pass_filenames: true
+
+      - id: python-isort
+        name: isort (Python)
+        entry: uv run isort
+        language: system
+        files: ^python/.*\.py$
+        pass_filenames: true
+
+      - id: python-flake8
+        name: flake8 (Python)
+        entry: uv run flake8
+        language: system
+        files: ^python/.*\.py$
+        pass_filenames: true
+
+      - id: python-pylint
+        name: pylint (Python)
+        entry: uv run pylint
+        language: system
+        files: ^python/.*\.py$
+        pass_filenames: true
+
+      - id: python-tests-small
+        name: Python small tests
+        entry: uv run pytest python/tests/small/ -x --tb=short
+        language: system
+        files: ^python/
+        pass_filenames: false
+
+  # JavaScript formatting and linting (using local configs)
+  - repo: local
+    hooks:
+      - id: javascript-lint
+        name: ESLint (JavaScript)
+        entry: npm run lint
+        language: system
+        files: ^javascript/.*\.(js|jsx)$
+        pass_filenames: false
+
+      - id: javascript-format-check
+        name: Prettier check (JavaScript)
+        entry: npm run format:check
+        language: system
+        files: ^javascript/.*\.(js|jsx|json|md)$
+        pass_filenames: false
+
+      - id: javascript-tests
+        name: JavaScript tests
+        entry: npm test -- --passWithNoTests
+        language: system
+        files: ^javascript/
+        pass_filenames: false

@@ -1,6 +1,5 @@
 """Small tests for WaveClient."""
 
-import pytest
 from wave_client import WaveClient
 
 

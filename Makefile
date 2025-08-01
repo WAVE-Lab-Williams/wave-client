@@ -33,7 +33,7 @@ clean:
 ###############################################################################
 
 # Python formatting and linting
-isort: 
+isort:
 	uv run isort python/
 
 black:
@@ -124,6 +124,8 @@ setup-local-dev:
 	uv pip install -e .[dev,test]
 	@echo "Installing JavaScript dependencies..."
 	@$(MAKE) setup-js
+	@echo "Installing pre-commit hooks..."
+	uv run pre-commit install
 	@echo "Checking for .env file..."
 	@if [ -f .env ]; then \
 		echo "✓ .env file found - using existing configuration"; \
