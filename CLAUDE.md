@@ -21,7 +21,7 @@ Create a dual-language client library (JavaScript + Python) for the WAVE Backend
 ### Server-Side Versioning (✅ COMPLETED)
 The backend already implements lightweight version compatibility checking:
 - **HTTP Headers**: `X-WAVE-Client-Version` (request) and `X-WAVE-API-Version` (response)
-- **Semantic Versioning**: Same major version = compatible (1.x.x ↔ 1.y.z), different major = incompatible  
+- **Semantic Versioning**: Same major version = compatible (1.x.x ↔ 1.y.z), different major = incompatible
 - **Non-blocking**: Server logs warnings for incompatible versions but allows requests
 - **Endpoint**: `/version` provides compatibility information
 - **Middleware**: Automatic header processing and logging for all requests
@@ -36,32 +36,14 @@ Create the following directory structure in this mostly empty repository:
 ```
 wave-client/
 ├── README.md
-├── LICENSE.txt               # MIT License
-├── .gitignore
-├── .python-version           # Python 3.12
-├── .nvmrc                    # Node.js 20 LTS
-├── pyproject.toml            # UV workspace coordinator
-├── package.json              # JavaScript coordinator
-├── .env.example              # Environment variables template
+├── pyproject.toml            # Python config
+├── package.json              # JavaScript config
 ├── Makefile                  # Development commands
-├── .github/
-│   └── workflows/
-│       ├── python-ci.yml
-│       └── javascript-ci.yml
-├── docs/
-│   ├── installation.md
-│   ├── examples.md
-│   └── api-reference.md
-├── javascript/
-│   ├── wave-client.js        # Main JS client
-│   └── wave-client.test.js   # JS tests
-├── python/
-│   ├── wave_client/
-│   │   └── client.py         # Main Python client
-│   └── tests/
-│       └── small/
-│           └── test_client.py
-├── tests/                    # Shared test utilities
+├── .github/workflows/        # CI/CD
+├── docs/                     # Documentation
+├── javascript/               # JS client & tests
+├── python/                   # Python client & tests
+├── tests/                    # Shared utilities
 └── tools/                    # Development tools
 ```
 
