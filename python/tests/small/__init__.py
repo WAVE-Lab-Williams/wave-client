@@ -1,0 +1,1 @@
+"""Small tests for WAVE Client Library."""

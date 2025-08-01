@@ -36,28 +36,46 @@ Create the following directory structure in this mostly empty repository:
 ```
 wave-client/
 ├── README.md
-├── LICENSE                    # MIT License
+├── LICENSE.txt               # MIT License
 ├── .gitignore
 ├── .python-version           # Python 3.12
-├── pyproject.toml
-├── uv.lock
+├── .nvmrc                    # Node.js 20 LTS
+├── pyproject.toml            # UV workspace coordinator
+├── package.json              # JavaScript coordinator
+├── .env.example              # Environment variables template
+├── Makefile                  # Development commands
 ├── .github/
 │   └── workflows/
+│       ├── python-ci.yml
+│       └── javascript-ci.yml
 ├── docs/
+│   ├── installation.md
+│   ├── examples.md
+│   └── api-reference.md
 ├── javascript/
+│   ├── wave-client.js        # Main JS client
+│   └── wave-client.test.js   # JS tests
 ├── python/
-├── tests/
-└── tools/
+│   ├── wave_client/
+│   │   └── client.py         # Main Python client
+│   └── tests/
+│       └── small/
+│           └── test_client.py
+├── tests/                    # Shared test utilities
+└── tools/                    # Development tools
 ```
 
 ### 1.2 Core Configuration Files
 
 **Tasks:**
-- [ ] Create `README.md` with installation instructions for both languages
-- [ ] Set up `pyproject.toml` with UV configuration and Python 3.12 requirement
-- [ ] Create `.python-version` file with Python 3.12
+- [x] Create `README.md` with installation instructions for both languages
+- [x] Set up `pyproject.toml` with UV configuration and Python 3.12 requirement
+- [x] Create `.python-version` file with Python 3.12
 - [x] Create `.gitignore` for Python, JavaScript, editor files, and local folder
-- [ ] Set up GitHub Actions workflows for testing both languages (basic testing only)
+- [x] Set up GitHub Actions workflows for testing both languages (basic testing only)
+- [x] Create `.env.example` with environment variables (WAVE_API_KEY, WAVE_API_URL)
+- [x] Create directory structure (docs/, javascript/, python/, tests/, tools/)
+- [x] Create documentation stubs (installation.md, examples.md, api-reference.md)
 
 ---
 
@@ -271,4 +289,8 @@ javascript/
 - **Python**: Response times under 100ms for simple operations, efficient pandas DataFrame conversion
 - **Both**: Support batch operations for large datasets, Unkey rate limiting awareness
 
+## Claude Memories
 
+### Development Insights
+- Memorized the intricate design considerations for creating a dual-language client library for a research data logging backend
+- Recognized the unique requirements of supporting both JavaScript (for frontend experiments) and Python (for data analysis) clients
