@@ -86,15 +86,9 @@ format-check-js:
 test-js:
 	npm test
 
-test-js-watch:
-	npm run test:watch
-
 # JavaScript build
 build-js:
 	npm run build
-
-build-js-watch:
-	npm run build:watch
 
 ###############################################################################
 # Combined Commands

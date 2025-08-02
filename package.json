@@ -10,14 +10,12 @@
   ],
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch",
     "lint": "eslint javascript/src/",
     "lint:fix": "eslint javascript/src/ --fix", 
     "format:check": "prettier --check javascript/src/",
     "format": "prettier --write javascript/src/",
     "build": "rollup -c",
     "build:prod": "NODE_ENV=production rollup -c",
-    "build:watch": "rollup -c --watch",
     "clean": "rm -rf javascript/dist/"
   },
   "devDependencies": {
