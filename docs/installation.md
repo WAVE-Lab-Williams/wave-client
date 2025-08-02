@@ -57,9 +57,6 @@ nvm (Node Version Manager) lets you install and manage multiple Node.js versions
 # Install nvm - follow the instructions at:
 # https://github.com/nvm-sh/nvm
 
-# After installation, restart your terminal or run:
-source ~/.bashrc  # or ~/.zshrc on macOS
-
 # Install and use the project's specified Node.js version (from .nvmrc)
 nvm use             # This reads .nvmrc and installs/uses Node.js 20 LTS
 

@@ -253,8 +253,15 @@ javascript/
 ## Phase 6: Documentation & Distribution
 
 ### 6.1 Documentation
+- [ ] **Documentation System Setup**: Unified auto-documentation approach
+  - [ ] Configure Sphinx + autodoc for Python client (add to dev dependencies)
+  - [ ] Set up JSDoc for JavaScript client (add to package.json devDependencies)
+  - [ ] Configure docsify for unified documentation site
+  - [ ] Create `docs/conf.py` for Sphinx configuration
+  - [ ] Add Makefile targets for generating docs from both clients
+  - [ ] Structure: `docs/python/` (Sphinx), `docs/javascript/` (JSDoc), main `api-reference.md` links both
 - [ ] **Installation Guide**: GitHub-based installation for both languages
-- [ ] **API Reference**: Auto-generated from code documentation
+- [ ] **API Reference**: Auto-generated from code documentation (Sphinx + JSDoc)
 - [ ] **Examples Library**: Real-world usage examples
 - [ ] **jsPsych Integration Guide**: Specific integration patterns
 
