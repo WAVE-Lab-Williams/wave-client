@@ -2,22 +2,30 @@
   "name": "wave-client-js",
   "version": "1.0.0",
   "description": "JavaScript client for the WAVE Backend API",
-  "main": "javascript/wave-client.js",
+  "main": "javascript/dist/wave-client.umd.js",
+  "module": "javascript/dist/wave-client.esm.js",
   "type": "module",
+  "files": [
+    "javascript/dist/"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "lint": "eslint javascript/",
-    "lint:fix": "eslint javascript/ --fix", 
-    "format:check": "prettier --check javascript/",
-    "format": "prettier --write javascript/",
+    "lint": "eslint javascript/src/",
+    "lint:fix": "eslint javascript/src/ --fix", 
+    "format:check": "prettier --check javascript/src/",
+    "format": "prettier --write javascript/src/",
     "build": "rollup -c",
-    "build:watch": "rollup -c --watch"
+    "build:prod": "NODE_ENV=production rollup -c",
+    "build:watch": "rollup -c --watch",
+    "clean": "rm -rf javascript/dist/"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.23.0",
+    "@rollup/plugin-terser": "^0.4.4",
     "babel-jest": "^29.7.0",
+    "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
