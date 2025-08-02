@@ -10,7 +10,7 @@ The JavaScript client has one primary purpose: logging experiment data during ex
 
 **Purpose**: Add experiment data row during experiment execution  
 **Endpoint**: `POST /api/v1/experiment-data/{experiment_id}/data/`  
-**Authentication**: EXPERIMENTEE role (via `WAVE_API_KEY` environment variable)
+**Authentication**: EXPERIMENTEE role (via URL parameter `?key=exp_abc123`)
 
 #### Input Parameters
 ```javascript
@@ -352,13 +352,21 @@ df = client.to_dataframe(search_result["data"])
 ## Common Patterns
 
 ### Authentication
+
+#### JavaScript Client (Browser-based)
 ```javascript
-// JavaScript - environment variable
-process.env.WAVE_API_KEY = "your-api-key-here";
+// URL parameter extraction (automatic)
+// https://experiment-site.com/task.html?key=exp_abc123
+
+// Or explicit API key option
+const client = new WaveClient({ 
+  apiKey: "exp_abc123"  // overrides URL parameter
+});
 ```
 
+#### Python Client (Server-side)
 ```python
-# Python - environment variable or explicit
+# Environment variable
 import os
 os.environ["WAVE_API_KEY"] = "your-api-key-here"
 

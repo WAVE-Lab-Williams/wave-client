@@ -147,10 +147,48 @@ class WaveClient {
 }
 ```
 
+### URL Parameter Authentication Errors
+
+The JavaScript client extracts API keys from URL parameters, which can lead to specific error scenarios:
+
+#### Common URL Authentication Issues
+
+```javascript
+// 1. Missing API key in URL
+// URL: https://experiment-site.com/task.html (no key parameter)
+// Error: AuthenticationError: "API key is required. Provide apiKey option or include 'key' parameter in URL."
+
+// 2. Empty API key parameter
+// URL: https://experiment-site.com/task.html?key=
+// Error: AuthenticationError: "API key cannot be empty"
+
+// 3. Invalid API key format
+// URL: https://experiment-site.com/task.html?key=invalid-key
+// HTTP 401 response -> AuthenticationError: "Authentication failed: Invalid API key"
+
+// 4. Wrong role permissions
+// URL: https://experiment-site.com/task.html?key=admin_key_instead_of_exp_key
+// HTTP 403 response -> AuthorizationError: "Authorization failed: Insufficient permissions. Required: EXPERIMENTEE, Found: ADMIN"
+```
+
+#### URL Parameter Extraction
+
+```javascript
+// Client automatically extracts from these URL formats:
+// ?key=exp_abc123          - query parameter (most common)
+// #key=exp_abc123          - hash parameter (alternative)
+// ?key=exp_abc123&other=1  - with other parameters
+
+// Manual override (for testing or special cases)
+const client = new WaveClient({ 
+  apiKey: "exp_abc123"  // overrides URL parameter extraction
+});
+```
+
 ### Usage Examples
 
 ```javascript
-// Basic error handling
+// Basic error handling with URL authentication
 try {
   const result = await client.logExperimentData(experimentId, participantId, data);
   console.log('Data logged successfully:', result);
@@ -159,8 +197,9 @@ try {
     console.error('Data validation failed:', error.detail);
     // Show user-friendly error message
   } else if (error instanceof AuthenticationError) {
-    console.error('API key is invalid:', error.detail);
-    // Redirect to configuration
+    console.error('Authentication failed:', error.detail);
+    // Check URL has valid key parameter: ?key=exp_abc123
+    // Or provide explicit apiKey in constructor
   } else if (error instanceof RateLimitError) {
     console.warn('Rate limited, will retry automatically');
     // Client already retried, this shouldn't happen often

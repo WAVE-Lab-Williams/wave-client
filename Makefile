@@ -72,7 +72,11 @@ setup-js:
 lint-js:
 	npm run lint
 
+lint-fix-js:
+	npm run lint:fix
+
 format-js:
+	npm run lint:fix
 	npm run format
 
 format-check-js:

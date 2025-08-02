@@ -12,7 +12,7 @@ Create a dual-language client library (JavaScript + Python) for the WAVE Backend
 - **Distribution**: GitHub Releases with built assets (JavaScript files + Python wheels), jsDelivr CDN integration
 - **Installation**: Release-based distribution (internal tool, no npm/PyPI publishing)
 - **Frontend Integration**: Direct browser usage via CDN, jsPsych compatibility
-- **Authentication**: Environment variable-based API keys for both clients (role automatically verified)
+- **Authentication**: URL parameter-based API keys for JavaScript client, environment variables for Python client (roles automatically verified)
 
 ### Reference Materials
 - **API Documentation**: `local/docs/api-usage.md` and `local/docs/database-schema.md` in wave-backend repo
@@ -209,7 +209,7 @@ javascript/
 ```
 
 **Tasks:**
-- [x] Create base HTTP client using Fetch API with environment variable API key authentication
+- [x] Create base HTTP client using Fetch API with **URL parameter-based API key authentication**
 - [x] Implement single primary method: `logExperimentData(experimentId, participantId, data)`
 - [x] Add generous retry logic with timeout (prevent experimental data loss)
 - [x] Add JSDoc documentation for public methods
@@ -218,6 +218,12 @@ javascript/
 - [x] Version compatibility headers (`X-WAVE-Client-Version` send, `X-WAVE-API-Version` receive)
 - [x] **Server-side compatibility checking**: Backend handles version validation and logging
 - [x] **No client-side compatibility logic needed**: Simple header sending only
+
+**Security Enhancement:**
+- **URL-based API Key Extraction**: Client extracts experimentee API key from URL parameters (`?key=exp_abc123`)
+- **Browser Security**: Avoids exposing API keys in JavaScript bundles or environment variables
+- **Session-specific Keys**: Each experiment session gets a unique temporary key via URL
+- **Backward Compatibility**: Maintains support for explicit `apiKey` option parameter
 
 ### 4.3 Browser Compatibility ✅ COMPLETED
 - [x] Ensure ES6 module support
@@ -235,11 +241,12 @@ javascript/
 - [x] **No dedicated jsPsych plugin needed** - just direct JSON data logging
 
 **Implementation Summary:**
-- **Complete WaveClient class** with authentication, retry logic, and error handling
+- **Complete WaveClient class** with URL-based authentication, retry logic, and error handling
 - **Comprehensive test suite** with 28 passing unit tests including retry, error, and jsPsych integration tests
 - **Build system** producing ES6, UMD, and minified distributions
-- **Working example** demonstrating jsPsych integration
+- **Working example** demonstrating jsPsych integration with URL parameter authentication
 - **Production ready** with proper error handling and data loss prevention
+- **Enhanced Security Model**: URL parameter-based API key extraction for browser experiments
 
 ---
 

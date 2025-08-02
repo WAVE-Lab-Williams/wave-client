@@ -5,9 +5,27 @@ This document provides a comprehensive reference for all WAVE Backend API endpoi
 ## Base Configuration
 
 - **Base URL**: `http://localhost:8000` (development) or configured via `WAVE_API_URL`
-- **Authentication**: Bearer token via `Authorization: Bearer {API_KEY}` or `WAVE_API_KEY` environment variable
+- **Authentication**: 
+  - **JavaScript Client**: Bearer token via `Authorization: Bearer {API_KEY}` extracted from URL parameter (`?key=exp_abc123`)
+  - **Python Client**: Bearer token via `Authorization: Bearer {API_KEY}` from `WAVE_API_KEY` environment variable
+  - **Role Verification**: API key role is automatically verified by the backend
 - **Versioning**: Send `X-WAVE-Client-Version` header, receive `X-WAVE-API-Version` response header
 - **Content-Type**: `application/json` for all requests/responses
+
+## Authentication Security Model
+
+### JavaScript Client (Browser-based)
+- **URL Parameter Extraction**: API key extracted from `?key=` or `#key=` URL parameter
+- **Security Benefits**: 
+  - No API keys exposed in JavaScript source code or bundles
+  - Each experiment session gets unique temporary key
+  - Prevents accidental exposure in version control
+- **Example Usage**: `https://experiment-site.com/task.html?key=exp_abc123&participant=P001`
+
+### Python Client (Server-side)
+- **Environment Variable**: Uses `WAVE_API_KEY` environment variable
+- **Suitable for**: Data analysis, batch processing, server-side operations
+- **Full API Access**: Can access all endpoints based on API key role
 
 ## System Endpoints
 
