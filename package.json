@@ -11,7 +11,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint javascript/src/",
-    "lint:fix": "eslint javascript/src/ --fix", 
+    "lint:fix": "eslint javascript/src/ --fix",
     "format:check": "prettier --check javascript/src/",
     "format": "prettier --write javascript/src/",
     "build": "rollup -c",
@@ -32,7 +32,9 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "testMatch": ["**/javascript/**/*.test.js"],
+    "testMatch": [
+      "**/javascript/**/*.test.js"
+    ],
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
