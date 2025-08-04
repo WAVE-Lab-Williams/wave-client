@@ -4,7 +4,11 @@ version = "1.0.0"
 description = "Dual-language client library (JavaScript + Python) for the WAVE Backend API"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "pandas>=2.3.1",
+    "pydantic>=2.11.7",
+]
 
 [project.optional-dependencies]
 dev = [
