@@ -2,6 +2,6 @@
 
 __version__ = "1.0.0"
 
-from .client import WaveClient
+from wave_client.client import WaveClient
 
 __all__ = ["WaveClient"]
