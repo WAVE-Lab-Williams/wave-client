@@ -1,10 +1,10 @@
 /**
- * fromJsPsychData tests for WAVE JavaScript client
+ * jsPsych data tests for WAVE JavaScript client
  */
 
-import WaveClient, { ValidationError } from '../src/wave-client.js';
-import { MOCK_DATA } from '../test-config.js';
-import { TestSetup } from './test-utils.js';
+import WaveClient, { ValidationError } from '../../src/wave-client.js';
+import { MOCK_DATA } from '../../test-config.js';
+import { TestSetup } from '../test-utils.js';
 
 describe('WaveClient fromJsPsychData', () => {
     beforeAll(() => {

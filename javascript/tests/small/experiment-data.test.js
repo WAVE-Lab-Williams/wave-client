@@ -1,17 +1,17 @@
 /**
- * logExperimentData tests for WAVE JavaScript client
+ * Experiment data tests for WAVE JavaScript client
  */
 
 import WaveClient, {
     ValidationError,
     AuthenticationError,
     AuthorizationError,
-    NotFoundError,
     RateLimitError,
+    NotFoundError,
     ServerError
-} from '../src/wave-client.js';
-import { MOCK_DATA, createMockFetch } from '../test-config.js';
-import { TestSetup } from './test-utils.js';
+} from '../../src/wave-client.js';
+import { MOCK_DATA, createMockFetch } from '../../test-config.js';
+import { TestSetup } from '../test-utils.js';
 
 describe('WaveClient logExperimentData', () => {
     let client;

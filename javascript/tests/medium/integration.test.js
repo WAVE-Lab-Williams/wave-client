@@ -2,7 +2,7 @@
  * Integration tests for WAVE JavaScript client
  */
 
-import { shouldSkipIntegrationTests, createTestClient, getSkipReason } from '../test-config.js';
+import { shouldSkipIntegrationTests, createTestClient, getSkipReason } from '../../test-config.js';
 
 describe('WaveClient Integration Tests', () => {
     beforeAll(async () => {

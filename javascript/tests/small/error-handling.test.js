@@ -2,9 +2,9 @@
  * Error handling tests for WAVE JavaScript client
  */
 
-import WaveClient, { WaveClientError, RateLimitError } from '../src/wave-client.js';
-import { MOCK_DATA, createMockFetch } from '../test-config.js';
-import { TestSetup } from './test-utils.js';
+import WaveClient, { WaveClientError, RateLimitError } from '../../src/wave-client.js';
+import { MOCK_DATA, createMockFetch } from '../../test-config.js';
+import { TestSetup } from '../test-utils.js';
 
 describe('WaveClient Error Handling', () => {
     let client;

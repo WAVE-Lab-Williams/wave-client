@@ -10,6 +10,11 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:small": "jest javascript/tests/small/",
+    "test:medium": "jest javascript/tests/medium/",
+    "test:verbose": "jest --verbose",
+    "test:small:verbose": "jest javascript/tests/small/ --verbose",
+    "test:medium:verbose": "jest javascript/tests/medium/ --verbose",
     "lint": "eslint javascript/src/",
     "lint:fix": "eslint javascript/src/ --fix",
     "format:check": "prettier --check javascript/src/",
@@ -33,7 +38,7 @@
   "jest": {
     "testEnvironment": "node",
     "testMatch": [
-      "**/javascript/**/*.test.js"
+      "**/javascript/tests/**/*.test.js"
     ],
     "transform": {
       "^.+\\.js$": "babel-jest"

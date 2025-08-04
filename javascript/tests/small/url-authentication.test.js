@@ -1,9 +1,9 @@
 /**
- * URL Parameter Authentication tests for WAVE JavaScript client
+ * URL parameter authentication tests for WAVE JavaScript client
  */
 
-import WaveClient from '../src/wave-client.js';
-import { TestSetup, BrowserMocks, TestHelpers } from './test-utils.js';
+import WaveClient from '../../src/wave-client.js';
+import { TestSetup, BrowserMocks, TestHelpers } from '../test-utils.js';
 
 describe('WaveClient URL Parameter Authentication', () => {
     let client;

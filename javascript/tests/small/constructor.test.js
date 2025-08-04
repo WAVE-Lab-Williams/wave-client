@@ -2,8 +2,8 @@
  * Constructor tests for WAVE JavaScript client
  */
 
-import WaveClient, { AuthenticationError } from '../src/wave-client.js';
-import { TestSetup, BrowserMocks, TestHelpers } from './test-utils.js';
+import WaveClient, { AuthenticationError } from '../../src/wave-client.js';
+import { TestSetup, BrowserMocks, TestHelpers } from '../test-utils.js';
 
 describe('WaveClient Constructor', () => {
     beforeAll(() => {

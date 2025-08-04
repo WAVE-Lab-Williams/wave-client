@@ -1,10 +1,10 @@
 /**
- * Utility methods tests for WAVE JavaScript client
+ * Utility method tests for WAVE JavaScript client
  */
 
-import WaveClient, { ValidationError } from '../src/wave-client.js';
-import { MOCK_DATA, createMockFetch } from '../test-config.js';
-import { TestSetup } from './test-utils.js';
+import WaveClient, { ValidationError } from '../../src/wave-client.js';
+import { MOCK_DATA, createMockFetch } from '../../test-config.js';
+import { TestSetup } from '../test-utils.js';
 
 describe('WaveClient Utility Methods', () => {
     let client;
