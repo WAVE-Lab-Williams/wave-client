@@ -14,12 +14,12 @@ Add this to your HTML experiment:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
 
-  const client = new WaveClient();  // Uses WAVE_API_KEY and WAVE_API_URL from environment
+  const client = new WaveClient();  // Auto-extracts API key from URL ?key=exp_abc123
 
   // Save data from your experiment
-  await client.logData(experimentId, participantId, {
+  await client.logExperimentData(experimentId, participantId, {
     reaction_time: 1.23,
     correct: true,
     trial_number: 1
@@ -36,9 +36,16 @@ from wave_client import WaveClient
 
 client = WaveClient()  # Uses WAVE_API_KEY and WAVE_API_URL from environment
 
-# Get all your experiment data as a spreadsheet (DataFrame)
-data = client.get_experiment_data(experiment_id)
-print(data.head())
+# Get all your experiment data as a pandas DataFrame
+experiment_data = client.experiment_data.list_as_dataframe(experiment_id=123)
+print(experiment_data.head())
+
+# Get experiments and experiment types
+experiments = client.experiments.list_as_dataframe()
+experiment_types = client.experiment_types.list_as_dataframe()
+
+# Advanced search across all data
+search_results = client.search.experiments_as_dataframe("stroop task")
 ```
 
 ## Installation
@@ -124,6 +131,33 @@ nvm use             # This reads .nvmrc and installs/uses Node.js 20 LTS
 make setup-local-dev
 ```
 
+### Repository Structure
+
+```
+wave-client/
+├── README.md                # This file
+├── CLAUDE.md               # Detailed development instructions
+├── package.json            # JavaScript dependencies & scripts
+├── pyproject.toml          # Python dependencies & project config
+├── Makefile               # Development commands
+├── docs/                  # Documentation
+├── javascript/            # JavaScript client
+│   ├── dist/             # Built files (ESM, UMD, minified)
+│   ├── src/              # Source code
+│   ├── tests/            # Test suites
+│   │   ├── small/        # Unit tests (fast, mocked)
+│   │   └── medium/       # Integration tests (real API)
+│   └── examples/         # Usage examples
+└── python/               # Python client  
+    ├── wave_client/      # Main package
+    │   ├── resources/    # API resource classes
+    │   ├── models/       # Data models
+    │   └── utils/        # Utilities
+    └── tests/           # Test suites
+        ├── small/       # Unit tests
+        └── medium/      # Integration tests
+```
+
 ### Development Commands
 
 ```bash
@@ -133,10 +167,13 @@ make setup-js          # JavaScript dependencies only
 make setup             # Python environment + JS dependencies
 
 # Testing
-make test-small        # Fast tests (Python small + JS)
+make test-small        # Fast tests (Python small + JS small)
 make test-all          # All tests (Python + JS)
-make test-python-small # Python tests only (small subset)
-make test-python-all   # All Python tests
+make test-python-small # Python unit tests only
+make test-python-all   # All Python tests (small + medium)
+make test-js           # All JavaScript tests
+make test-js-small     # JavaScript unit tests only
+make test-js-medium    # JavaScript integration tests only
 
 # Code quality
 make format           # Format all code (Python + JS)

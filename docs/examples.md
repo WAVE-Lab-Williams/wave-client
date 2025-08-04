@@ -1,96 +1,307 @@
 # Examples
 
-## JavaScript: Simple Experiment
+## JavaScript: Basic Experiment Logging
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Experiment</title>
+    <title>Reaction Time Experiment</title>
 </head>
 <body>
     <div id="experiment">
-        <button onclick="recordResponse('yes')">Yes</button>
-        <button onclick="recordResponse('no')">No</button>
+        <p>Click the button when you see it turn red!</p>
+        <button id="target" onclick="recordResponse()">Click Me</button>
+        <div id="status"></div>
     </div>
 
     <script type="module">
-        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+        import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
 
+        // Client automatically detects API key from URL parameter (?key=exp_abc123)
         const client = new WaveClient();
-        const experimentId = 'your-experiment-id';
+        
+        // Experiment configuration (normally from URL or backend)
+        const experimentId = 123;  // Numeric experiment ID
         const participantId = 'participant-001';
+        
+        let trialNumber = 1;
+        let startTime;
 
-        window.recordResponse = async function(response) {
-            await client.logData(experimentId, participantId, {
-                response: response,
-                reaction_time: Date.now() - startTime,
-                trial_number: 1
-            });
+        // Start experiment
+        function startTrial() {
+            const button = document.getElementById('target');
+            const status = document.getElementById('status');
+            
+            // Random delay before showing target
+            setTimeout(() => {
+                button.style.backgroundColor = 'red';
+                startTime = performance.now();
+                status.textContent = 'Click now!';
+            }, Math.random() * 3000 + 1000);
         }
 
-        const startTime = Date.now();
+        window.recordResponse = async function() {
+            const reactionTime = (performance.now() - startTime) / 1000; // Convert to seconds
+            
+            try {
+                await client.logExperimentData(experimentId, participantId, {
+                    reaction_time: reactionTime,
+                    trial_number: trialNumber,
+                    timestamp: new Date().toISOString()
+                });
+                
+                document.getElementById('status').textContent = 
+                    `Trial ${trialNumber} completed! RT: ${reactionTime.toFixed(3)}s`;
+                
+                trialNumber++;
+                
+                // Reset for next trial
+                setTimeout(() => {
+                    document.getElementById('target').style.backgroundColor = '';
+                    document.getElementById('status').textContent = 'Get ready...';
+                    setTimeout(startTrial, 1000);
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Failed to log data:', error);
+                document.getElementById('status').textContent = 'Error logging data!';
+            }
+        }
+
+        // Start first trial
+        startTrial();
     </script>
 </body>
 </html>
 ```
 
-## Python: Get Your Data
+## JavaScript: jsPsych Integration
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jsPsych + WAVE Experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.0"></script>
+    <script type="module">
+        import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
+
+        const client = new WaveClient();
+        const experimentId = 123;
+        const participantId = 'participant-001';
+
+        // jsPsych experiment timeline
+        const timeline = [];
+
+        // Instructions
+        const instructions = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: `
+                <p>In this experiment, you will see words in different colors.</p>
+                <p>Press <strong>R</strong> if the word is red, <strong>B</strong> if blue.</p>
+                <p>Press any key to begin.</p>
+            `
+        };
+        timeline.push(instructions);
+
+        // Stroop trials
+        const stimuli = [
+            { word: 'RED', color: 'red', congruent: true },
+            { word: 'BLUE', color: 'blue', congruent: true },
+            { word: 'RED', color: 'blue', congruent: false },
+            { word: 'BLUE', color: 'red', congruent: false }
+        ];
+
+        for (let i = 0; i < stimuli.length; i++) {
+            const trial = {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: `<p style="color: ${stimuli[i].color}; font-size: 48px;">${stimuli[i].word}</p>`,
+                choices: ['r', 'b'],
+                data: {
+                    word: stimuli[i].word,
+                    color: stimuli[i].color,
+                    congruent: stimuli[i].congruent,
+                    trial_number: i + 1
+                },
+                on_finish: async function(data) {
+                    // Convert jsPsych data to WAVE format and log
+                    const waveData = client.fromJsPsychData(data);
+                    
+                    try {
+                        await client.logExperimentData(experimentId, participantId, waveData);
+                        console.log('Trial data logged successfully');
+                    } catch (error) {
+                        console.error('Failed to log trial data:', error);
+                    }
+                }
+            };
+            timeline.push(trial);
+        }
+
+        // Run experiment
+        jsPsych.run(timeline);
+    </script>
+</head>
+<body></body>
+</html>
+```
+
+## Python: Basic Data Analysis
 
 ```python
 from wave_client import WaveClient
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Connect to WAVE (uses WAVE_API_KEY and WAVE_API_URL from environment)
+# Connect to WAVE (uses WAVE_API_KEY environment variable)
 client = WaveClient()
 
-# Get data from one experiment
-experiment_data = client.get_experiment_data('your-experiment-id')
-print(f"Got {len(experiment_data)} rows of data")
-print(experiment_data.head())
+# Get experiment data as DataFrame
+experiment_id = 123
+data = client.experiment_data.list_as_dataframe(experiment_id=experiment_id)
 
-# Basic analysis
-average_reaction_time = experiment_data['reaction_time'].mean()
-accuracy = experiment_data['correct'].mean()
+print(f"Retrieved {len(data)} data points from experiment {experiment_id}")
+print("\nData overview:")
+print(data.head())
 
-print(f"Average reaction time: {average_reaction_time:.2f}ms")
-print(f"Accuracy: {accuracy:.2%}")
+# Basic statistics
+if 'reaction_time' in data.columns:
+    avg_rt = data['reaction_time'].mean()
+    print(f"\nAverage reaction time: {avg_rt:.3f} seconds")
+
+if 'correct' in data.columns:
+    accuracy = data['correct'].mean()
+    print(f"Overall accuracy: {accuracy:.2%}")
+
+# Plot reaction time distribution
+if 'reaction_time' in data.columns:
+    plt.figure(figsize=(10, 6))
+    plt.hist(data['reaction_time'], bins=20, alpha=0.7)
+    plt.xlabel('Reaction Time (seconds)')
+    plt.ylabel('Frequency')
+    plt.title('Reaction Time Distribution')
+    plt.show()
 ```
 
-## Python: Multiple Experiments
+## Python: Multi-Experiment Analysis
 
 ```python
 from wave_client import WaveClient
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Connect to WAVE (uses environment variables)
-client = WaveClient()
-
-# Get data from multiple experiments
-experiment_ids = ['exp1', 'exp2', 'exp3']
-all_data = []
-
-for exp_id in experiment_ids:
-    data = client.get_experiment_data(exp_id)
-    data['experiment_name'] = exp_id  # Add experiment ID column
-    all_data.append(data)
-
-# Combine all experiments
-combined_data = pd.concat(all_data, ignore_index=True)
-print(f"Total data points: {len(combined_data)}")
-
-# Compare across experiments
-results = combined_data.groupby('experiment_name')['reaction_time'].mean()
-print("Average reaction time by experiment:")
-print(results)
+async with WaveClient() as client:
+    # Get all experiments
+    experiments = client.experiments.list_as_dataframe()
+    print("Available experiments:")
+    print(experiments[['id', 'name', 'description']])
+    
+    # Analyze specific experiments
+    experiment_ids = [123, 124, 125]  # Your experiment IDs
+    all_data = []
+    
+    for exp_id in experiment_ids:
+        try:
+            data = client.experiment_data.list_as_dataframe(experiment_id=exp_id)
+            # Add experiment info
+            exp_info = client.experiments.get(exp_id)
+            data['experiment_name'] = exp_info['name']
+            data['experiment_id'] = exp_id
+            all_data.append(data)
+            print(f"Loaded {len(data)} rows from experiment {exp_id}")
+        except Exception as e:
+            print(f"Failed to load experiment {exp_id}: {e}")
+    
+    if all_data:
+        # Combine all data
+        combined_data = pd.concat(all_data, ignore_index=True)
+        
+        # Compare experiments
+        comparison = combined_data.groupby('experiment_name').agg({
+            'reaction_time': ['mean', 'std', 'count'],
+            'correct': 'mean'
+        }).round(3)
+        
+        print("\nExperiment comparison:")
+        print(comparison)
+        
+        # Visualization
+        plt.figure(figsize=(12, 8))
+        
+        # Reaction time comparison
+        plt.subplot(2, 2, 1)
+        sns.boxplot(data=combined_data, x='experiment_name', y='reaction_time')
+        plt.title('Reaction Time by Experiment')
+        plt.xticks(rotation=45)
+        
+        # Accuracy comparison
+        plt.subplot(2, 2, 2)
+        accuracy_by_exp = combined_data.groupby('experiment_name')['correct'].mean()
+        accuracy_by_exp.plot(kind='bar')
+        plt.title('Accuracy by Experiment')
+        plt.ylabel('Accuracy')
+        plt.xticks(rotation=45)
+        
+        plt.tight_layout()
+        plt.show()
 ```
 
-## Installation Notes
+## Python: Search and Filter Data
 
-**JavaScript**: Replace `v1.0.0` in the CDN URL with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases).
+```python
+from wave_client import WaveClient
 
-**Python**: Install the latest version:
+with WaveClient() as client:
+    # Search for specific experiments
+    stroop_experiments = client.search.experiments_as_dataframe('stroop task')
+    print("Found Stroop experiments:")
+    print(stroop_experiments[['id', 'name']])
+    
+    # Get data with filtering
+    if len(stroop_experiments) > 0:
+        exp_id = stroop_experiments.iloc[0]['id']
+        
+        # Filter by participant
+        participant_data = client.experiment_data.list_as_dataframe(
+            experiment_id=exp_id,
+            participant_id='participant-001'
+        )
+        
+        # Filter by data content (search in JSON data)
+        correct_responses = client.search.experiment_data_as_dataframe(
+            'correct: true'
+        )
+        
+        print(f"Participant data: {len(participant_data)} rows")
+        print(f"Correct responses: {len(correct_responses)} rows")
+```
+
+## Installation
+
+### JavaScript
+
+Add to your HTML:
+```html
+<script type="module">
+    import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
+    // Your experiment code here
+</script>
+```
+
+Or install via npm:
 ```bash
-# Find the latest .whl file on the releases page and install:
-pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/latest/download/wave_client-1.0.0-py3-none-any.whl
+npm install wave-client
+```
+
+### Python
+
+```bash
+pip install wave-client
+```
+
+For the latest development version:
+```bash
+pip install git+https://github.com/WAVE-Lab-Williams/wave-client.git
 ```

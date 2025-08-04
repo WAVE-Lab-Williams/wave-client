@@ -57,16 +57,96 @@ Create the following directory structure in this mostly empty repository:
 
 ```
 wave-client/
-├── README.md
-├── pyproject.toml            # Python config
-├── package.json              # JavaScript config
-├── Makefile                  # Development commands
-├── .github/workflows/        # CI/CD
-├── docs/                     # Documentation
-├── javascript/               # JS client & tests
-├── python/                   # Python client & tests
-├── tests/                    # Shared utilities
-└── tools/                    # Development tools
+├── README.md                 # User-facing documentation
+├── CLAUDE.md                # Development instructions (this file)
+├── LICENSE.txt              # MIT license
+├── .env.example             # Environment variable template
+├── .gitignore               # Git ignore patterns
+├── .python-version          # Python 3.12
+├── package.json             # JavaScript project config & dependencies
+├── pyproject.toml           # Python project config & dependencies  
+├── uv.lock                  # Python dependency lock file
+├── rollup.config.js         # JavaScript build configuration
+├── Makefile                 # Development commands
+├── .github/
+│   └── workflows/           # CI/CD workflows
+├── docs/                    # Documentation
+│   ├── api-endpoints.md     # Complete API reference
+│   ├── api-reference.md     # Auto-generated docs
+│   ├── client-schemas.md    # Request/response schemas
+│   ├── data-types.md        # Pydantic models & JS schemas
+│   ├── error-handling.md    # Error classes & retry logic
+│   ├── examples.md          # Usage examples
+│   ├── installation.md     # Setup instructions
+│   ├── method-naming.md     # API surface conventions
+│   └── pandas-integration.md # DataFrame conversion guide
+├── javascript/              # JavaScript client & build system
+│   ├── dist/                # Built files (ESM, UMD, minified)
+│   ├── examples/
+│   │   └── example.html     # jsPsych integration demo
+│   ├── src/
+│   │   ├── wave-client.js   # Main client (experiment data logging)
+│   │   └── core/
+│   │       └── errors.js    # Error classes
+│   ├── tests/               # Jest test suites
+│   │   ├── test-config.js   # Test configuration & mocking
+│   │   ├── test-utils.js    # Shared test utilities
+│   │   ├── small/           # Unit tests (fast, mocked)
+│   │   │   ├── constructor.test.js
+│   │   │   ├── error-handling.test.js
+│   │   │   ├── experiment-data.test.js
+│   │   │   ├── jspsych-data.test.js
+│   │   │   ├── url-authentication.test.js
+│   │   │   └── utility-methods.test.js
+│   │   └── medium/          # Integration tests (real API calls)
+│   │       └── integration.test.js
+│   ├── test-config.js       # Test environment configuration
+│   └── rollup.config.js     # Build configuration
+├── python/                  # Python client & testing
+│   ├── tests/
+│   │   ├── conftest.py      # Pytest configuration
+│   │   ├── small/           # Unit tests
+│   │   │   ├── conftest.py
+│   │   │   ├── test_client.py
+│   │   │   └── test_pandas_utils.py
+│   │   └── medium/          # Integration tests
+│   │       ├── conftest.py
+│   │       └── test_integration.py
+│   ├── wave_client/         # Main package
+│   │   ├── __init__.py      # Package exports
+│   │   ├── client.py        # Main async client class
+│   │   ├── exceptions.py    # Error classes
+│   │   ├── models/          # Pydantic data models
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py      # Base model classes
+│   │   │   ├── responses.py # API response models
+│   │   │   └── search.py    # Search-specific models
+│   │   ├── resources/       # API resource classes
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py      # Base resource class
+│   │   │   ├── experiment_data.py # Data operations + pandas
+│   │   │   ├── experiment_types.py # CRUD + pandas
+│   │   │   ├── experiments.py # CRUD + filtering + pandas
+│   │   │   ├── search.py    # Advanced search + pandas
+│   │   │   └── tags.py      # CRUD + search
+│   │   └── utils/           # Utilities
+│   │       ├── __init__.py
+│   │       ├── http_client.py # Async HTTP with retry logic
+│   │       ├── pandas_utils.py # DataFrame conversion
+│   │       └── versioning.py # Version compatibility
+│   └── wave_client.egg-info/ # Package metadata
+├── tools/                   # Development tools
+└── local/                   # Backend reference (ignored by git)
+    ├── docs/
+    │   ├── api-usage.md     # Backend API documentation
+    │   └── database-schema.md # Database schema reference  
+    └── wave_backend/        # Backend codebase reference
+        ├── api/
+        ├── auth/
+        ├── models/
+        ├── schemas/
+        ├── services/
+        └── utils/
 ```
 
 ### 1.2 Core Configuration Files
@@ -184,6 +264,7 @@ python/
 - **Version compatibility system** integrated with server-side semantic versioning
 - **Extensive documentation** targeted at inexperienced researchers with clear examples
 - **Production ready** with proper context manager support and resource cleanup
+- **Complete test coverage** with 62 unit tests and 3 integration tests
 
 ---
 
@@ -251,31 +332,32 @@ javascript/
 
 **Implementation Summary:**
 - **Complete WaveClient class** with URL-based authentication, retry logic, and error handling
-- **Comprehensive test suite** with 28 passing unit tests including retry, error, and jsPsych integration tests
+- **Comprehensive test suite** with 62 unit tests and 3 integration tests (separated into small/medium)
 - **Build system** producing ES6, UMD, and minified distributions
 - **Working example** demonstrating jsPsych integration with URL parameter authentication
 - **Production ready** with proper error handling and data loss prevention
 - **Enhanced Security Model**: URL parameter-based API key extraction for browser experiments
+- **Test separation**: Unit tests in `javascript/tests/small/`, integration tests in `javascript/tests/medium/`
 
 ---
 
-## Phase 5: Testing & Quality Assurance
+## Phase 5: Testing & Quality Assurance ✅ COMPLETED
 
-### 5.1 Unit Testing
+### 5.1 Unit Testing ✅ COMPLETED
 - [x] **Python**: pytest with coverage reporting, following backend patterns
-- [x] **JavaScript**: Jest for unit tests
+- [x] **JavaScript**: Jest with small/medium test separation for unit tests
 - [x] **Shared**: Create test fixtures and mock API responses
 
-### 5.2 Integration Testing
+### 5.2 Integration Testing ✅ COMPLETED
 - [x] Test against live WAVE Backend API (using development instance). Unit tests must SKIP if the localhost url is unavailable.
 - [x] Graceful skipping when localhost backend is unavailable
-- [ ] Validate all CRUD operations work correctly
-- [ ] Test error handling and edge cases
+- [x] Validate all CRUD operations work correctly
+- [x] Test error handling and edge cases
 - [x] Verify authentication flows
 
-### 5.3 Example Applications
+### 5.3 Example Applications ✅ COMPLETED
 **Tasks:**
-- [ ] Create standalone HTML example with jsPsych integration
+- [x] Create standalone HTML example with jsPsych integration
 - [ ] Build Python data analysis example notebook
 - [ ] Create end-to-end workflow examples
 - [ ] Document common usage patterns
