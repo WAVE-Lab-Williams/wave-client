@@ -12,30 +12,29 @@ try {
   dotenv.config();
 } catch (error) {
   // dotenv not available, that's fine for browser environments
+  console.warn('Warning: dotenv could not be loaded:', error.message);
 }
 
 export const TEST_CONFIG = {
   // API configuration for integration tests
   apiKey: process.env.WAVE_API_KEY,
-  baseUrl: process.env.WAVE_API_URL || 'http://localhost:8000',
-  
+  baseUrl: 'http://localhost:8000', // Always use localhost for integration tests
+
   // Test timeouts (shorter for tests)
   timeout: 5000,
-  
-  // Skip integration tests if no API key is provided
-  skipIntegration: !process.env.WAVE_API_KEY
-};
 
-/**
+  // Skip integration tests if no API key is provided OR localhost is unavailable
+  skipIntegration: !process.env.WAVE_API_KEY
+};/**
  * Mock data for testing
  */
 export const MOCK_DATA = {
   // Mock experiment UUID
   experimentId: '550e8400-e29b-41d4-a716-446655440000',
-  
+
   // Mock participant ID
   participantId: 'TEST-PARTICIPANT-001',
-  
+
   // Mock experiment data
   experimentData: {
     reaction_time: 1.234,
@@ -43,7 +42,7 @@ export const MOCK_DATA = {
     difficulty_level: 2,
     stimulus_type: 'visual'
   },
-  
+
   // Mock jsPsych trial data
   jsPsychTrialData: {
     rt: 1234,           // Reaction time in milliseconds
@@ -55,7 +54,7 @@ export const MOCK_DATA = {
     time_elapsed: 5432,
     internal_node_id: '0.0-0.0'
   },
-  
+
   // Mock API responses
   successResponse: {
     id: 1,
@@ -68,19 +67,19 @@ export const MOCK_DATA = {
     difficulty_level: 2,
     stimulus_type: 'visual'
   },
-  
+
   healthResponse: {
     status: 'healthy',
     service: 'wave-backend'
   },
-  
+
   versionResponse: {
     api_version: '1.0.0',
     client_version: '1.0.0',
     compatible: true,
     compatibility_rule: 'Semantic versioning: same major version = compatible'
   },
-  
+
   // Mock error responses
   errorResponses: {
     validation: {
@@ -111,11 +110,53 @@ export const MOCK_DATA = {
 };
 
 /**
- * Check if integration tests should be skipped
- * @returns {boolean} True if integration tests should be skipped
+ * Check if localhost backend is available
+ * @returns {Promise<boolean>} True if localhost backend is reachable
  */
-export function shouldSkipIntegrationTests() {
-  return TEST_CONFIG.skipIntegration;
+export async function isLocalhostAvailable() {
+  try {
+    const response = await fetch(`${TEST_CONFIG.baseUrl}/health`, {
+      method: 'GET',
+      signal: AbortSignal.timeout ? AbortSignal.timeout(2000) : undefined
+    });
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Check if integration tests should be skipped
+ * @returns {Promise<boolean>} True if integration tests should be skipped
+ */
+export async function shouldSkipIntegrationTests() {
+  // Check API key first (faster check)
+  if (TEST_CONFIG.skipIntegration) {
+    return true;
+  }
+
+  // Then check localhost availability
+  const localhostAvailable = await isLocalhostAvailable();
+  return !localhostAvailable;
+}
+
+/**
+ * Get the reason why integration tests are being skipped
+ * @returns {Promise<string|null>} Reason for skipping, or null if not skipping
+ */
+export async function getSkipReason() {
+  // Check API key first (faster check)
+  if (!process.env.WAVE_API_KEY) {
+    return 'no API key provided in .env file';
+  }
+
+  // Then check localhost availability
+  const localhostAvailable = await isLocalhostAvailable();
+  if (!localhostAvailable) {
+    return 'localhost backend is not available';
+  }
+
+  return null;
 }
 
 /**
@@ -123,12 +164,13 @@ export function shouldSkipIntegrationTests() {
  * @returns {Promise<WaveClient>} Configured test client
  */
 export async function createTestClient() {
-  if (shouldSkipIntegrationTests()) {
-    throw new Error('Integration tests are skipped - no API key provided in .env file');
+  const skipReason = await getSkipReason();
+  if (skipReason) {
+    throw new Error(`Integration tests are skipped - ${skipReason}`);
   }
-  
+
   const { default: WaveClient } = await import('./src/wave-client.js');
-  
+
   return new WaveClient({
     apiKey: TEST_CONFIG.apiKey,
     baseUrl: TEST_CONFIG.baseUrl,

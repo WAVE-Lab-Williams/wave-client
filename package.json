@@ -31,7 +31,7 @@
     "rollup": "^4.9.0"
   },
   "jest": {
-    "testEnvironment": "jsdom",
+    "testEnvironment": "node",
     "testMatch": [
       "**/javascript/**/*.test.js"
     ],
