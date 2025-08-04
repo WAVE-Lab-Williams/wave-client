@@ -9,7 +9,11 @@ class WaveClientError(Exception):
     def __init__(
         self, message: str, status_code: Optional[int] = None, detail: Optional[str] = None
     ):
-        super().__init__(message)
+        # Include detail in the displayed message
+        full_message = message
+        if detail:
+            full_message = f"{message}: {detail}"
+        super().__init__(full_message)
         self.message = message
         self.status_code = status_code
         self.detail = detail

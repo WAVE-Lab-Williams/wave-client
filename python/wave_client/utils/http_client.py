@@ -7,6 +7,7 @@ import random
 from typing import Any, Dict, Optional
 
 import httpx
+from dotenv import load_dotenv
 from wave_client.exceptions import (
     AuthenticationError,
     AuthorizationError,
@@ -35,14 +36,20 @@ class HTTPClient:
     ):
         """Initialize HTTP client.
 
+        Automatically loads environment variables from .env file for easier configuration.
+
         Args:
-            api_key: API key for authentication. If None, uses WAVE_API_KEY env var.
-            base_url: Base URL for API. If None, uses WAVE_API_URL env var or default.
+            api_key: API key for authentication. If None, uses WAVE_API_KEY from .env file.
+            base_url: Base URL for API. If None, uses WAVE_API_URL from .env file
+                or defaults to localhost.
             max_retries: Maximum number of retries for failed requests.
             base_delay: Base delay in seconds for exponential backoff.
             max_delay: Maximum delay in seconds between retries.
             timeout: Request timeout in seconds.
         """
+        # Load environment variables from .env file for easier configuration
+        load_dotenv()
+
         self.api_key = api_key or os.getenv("WAVE_API_KEY")
         if not self.api_key:
             raise AuthenticationError(
