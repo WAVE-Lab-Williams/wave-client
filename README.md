@@ -120,6 +120,13 @@ uv pip install -e .[dev,test]
    - **For experiments**: Add `WAVE_API_KEY` and `WAVE_API_URL` to your Vercel environment variables
    - **For analysis**: Copy `.env.example` to `.env` and fill in your values
 
+## Detailed docs
+
+- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
+- [Examples](docs/examples.md) - Working examples of experiments and data analysis
+- [API Reference](docs/api-reference.md) - Complete method documentation
+
+
 ## For Developers
 
 If you want to modify the clients locally, you'll need Node.js and Python:
@@ -192,14 +199,6 @@ make build-js-watch   # Build JS with auto-rebuild on changes
 # Cleanup
 make clean           # Remove build artifacts, cache files, etc.
 ```
-
-## More Help
-
-- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
-- [Examples](docs/examples.md) - Working examples of experiments and data analysis
-- [API Reference](docs/api-reference.md) - Complete method documentation
-
-Need help? Contact Prof. Kim Wong.
 
 ---
 

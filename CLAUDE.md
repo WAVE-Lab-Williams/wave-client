@@ -366,17 +366,16 @@ javascript/
 ## Phase 6: Documentation & Distribution
 
 ### 6.1 Documentation
-- [ ] **Documentation System Setup**: Unified auto-documentation approach
-  - [ ] Configure Sphinx + autodoc for Python client (add to dev dependencies)
-  - [ ] Set up JSDoc for JavaScript client (add to package.json devDependencies)
-  - [ ] Configure docsify for unified documentation site
-  - [ ] Create `docs/conf.py` for Sphinx configuration
-  - [ ] Add Makefile targets for generating docs from both clients
-  - [ ] Structure: `docs/python/` (Sphinx), `docs/javascript/` (JSDoc), main `api-reference.md` links both
-- [ ] **Installation Guide**: GitHub-based installation for both languages
-- [ ] **API Reference**: Auto-generated from code documentation (Sphinx + JSDoc)
-- [ ] **Examples Library**: Real-world usage examples
-- [ ] **jsPsych Integration Guide**: Specific integration patterns
+- [x] **Documentation System Setup**: Unified auto-documentation approach
+  - [x] Configure Sphinx + autodoc for Python client (add to dev dependencies)
+  - [x] Set up JSDoc for JavaScript client (add to package.json devDependencies)
+  - [x] Configure docsify for unified documentation site
+  - [x] Create `docs/conf.py` for Sphinx configuration
+  - [x] Add Makefile targets for generating docs from both clients
+  - [x] Structure: `docs/python/` (Sphinx), `docs/javascript/` (JSDoc), main `api-reference.md` links both
+- [x] **Installation Guide**: GitHub-based installation for both languages
+- [x] **API Reference**: Auto-generated from code documentation (Sphinx + JSDoc)
+- [x] **Examples Library**: Real-world usage examples
 
 ### 6.2 GitHub Release Distribution Setup
 **Tasks:**
@@ -388,8 +387,7 @@ javascript/
 - [ ] Configure jsDelivr CDN access via GitHub releases
   - [ ] JavaScript: `https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js`
   - [ ] Python: `https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl`
-- [ ] Test the complete release workflow:
-- [ ] 
+- [ ] Test the complete release workflow
 ---
 
 ## Development Guidelines
