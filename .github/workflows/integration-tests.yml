@@ -80,11 +80,8 @@ jobs:
           # Wait for server to be ready
           timeout 30 bash -c 'until curl -f http://localhost:8000/health; do sleep 1; done'
         env:
-          POSTGRES_USER: ${{ secrets.TEST_POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.TEST_POSTGRES_DB }}
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
+          DATABASE_URL: postgresql+asyncpg://${{ secrets.TEST_POSTGRES_USER }}:${{ secrets.TEST_POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.TEST_POSTGRES_DB }}
+          WAVE_API_KEY: ${{ secrets.WAVE_API_KEY }}
           ROOT_VALIDATOR_KEY: ${{ secrets.ROOT_VALIDATOR_KEY }}
 
       # Set up Node.js for JavaScript client tests
