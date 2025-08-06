@@ -100,7 +100,6 @@ wave-client/
 │   │   │   └── utility-methods.test.js
 │   │   └── medium/          # Integration tests (real API calls)
 │   │       └── integration.test.js
-│   ├── test-config.js       # Test environment configuration
 │   └── rollup.config.js     # Build configuration
 ├── python/                  # Python client & testing
 │   ├── tests/
@@ -290,10 +289,10 @@ javascript/
 │   │   └── errors.js          # Error classes
 ├── dist/                      # Built files (ESM, UMD, minified)
 ├── tests/
+│   ├── test-config.js         # Test configuration and mocking
 │   └── wave-client.test.js    # Comprehensive unit tests
 ├── examples/
 │   └── example.html           # jsPsych integration example
-├── test-config.js             # Test configuration and mocking
 ├── rollup.config.js           # Build configuration
 └── package.json               # Dependencies and scripts
 ```
@@ -358,7 +357,7 @@ javascript/
 ### 5.3 Example Applications ✅ COMPLETED
 **Tasks:**
 - [x] Create standalone HTML example with jsPsych integration
-- [ ] Build Python data analysis example notebook
+- [x] Build Python data analysis example notebook
 - [ ] Create end-to-end workflow examples
 - [ ] Document common usage patterns
 
@@ -390,13 +389,7 @@ javascript/
   - [ ] JavaScript: `https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js`
   - [ ] Python: `https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl`
 - [ ] Test the complete release workflow:
-
-### 6.3 Maintenance & Support
-- [ ] Create issue templates for bug reports and feature requests
-- [ ] Set up automated dependency updates
-- [ ] Plan backward compatibility strategy
-- [ ] Design upgrade migration guides
-
+- [ ] 
 ---
 
 ## Development Guidelines

@@ -119,7 +119,7 @@ setup-local-dev:
 	@echo "Setting up local development environment..."
 	@echo "Creating Python virtual environment..."
 	uv venv
-	uv pip install -e .[dev,test]
+	uv pip install -e .[dev,test,notebook]
 	@echo "Installing JavaScript dependencies..."
 	@$(MAKE) setup-js
 	@echo "Installing pre-commit hooks..."
