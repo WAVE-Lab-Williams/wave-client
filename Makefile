@@ -90,6 +90,13 @@ test-js:
 build-js:
 	npm run build
 
+# Documentation generation
+build-docs:
+	@echo "Generating Python API documentation..."
+	uv run python tools/generate_python_docs.py
+	@echo "Generating JavaScript API documentation..."
+	npm run docs:js
+
 ###############################################################################
 # Combined Commands
 ###############################################################################
