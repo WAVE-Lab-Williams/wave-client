@@ -3,7 +3,7 @@
  */
 
 import WaveClient, { ValidationError } from '../../src/wave-client.js';
-import { MOCK_DATA } from '../../test-config.js';
+import { MOCK_DATA } from '../test-config.js';
 import { TestSetup } from '../test-utils.js';
 
 describe('WaveClient fromJsPsychData', () => {

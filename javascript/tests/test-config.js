@@ -169,7 +169,7 @@ export async function createTestClient() {
     throw new Error(`Integration tests are skipped - ${skipReason}`);
   }
 
-  const { default: WaveClient } = await import('./src/wave-client.js');
+  const { default: WaveClient } = await import('../src/wave-client.js');
 
   return new WaveClient({
     apiKey: TEST_CONFIG.apiKey,
