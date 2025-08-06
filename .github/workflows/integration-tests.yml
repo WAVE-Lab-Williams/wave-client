@@ -64,6 +64,13 @@ jobs:
           uv venv
           uv pip install -e .[dev,test]
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 10
+          timeout 30 bash -c 'until pg_isready -h localhost -p 5432; do sleep 1; done'
+          echo "PostgreSQL is ready!"
+
       - name: Start backend server
         working-directory: wave-backend
         run: |
