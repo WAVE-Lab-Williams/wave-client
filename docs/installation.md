@@ -15,6 +15,10 @@ Add this to your HTML experiment - no installation needed:
 </script>
 ```
 
+**Important**: Your experiment URL must include the API key:
+- `https://your-site.com/experiment.html?key=exp_abc123`
+- The client automatically extracts the key from the `?key=` parameter
+
 ### CDN Options
 
 ```html

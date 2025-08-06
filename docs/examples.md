@@ -2,33 +2,34 @@
 
 ## JavaScript: Basic Experiment Logging
 
+Add your API key to the URL as a query parameter: `?key=your_api_key_here`
+
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reaction Time Experiment</title>
+    <title>Simple Reaction Time Experiment</title>
 </head>
 <body>
     <div id="experiment">
         <p>Click the button when you see it turn red!</p>
         <button id="target" onclick="recordResponse()">Click Me</button>
-        <div id="status"></div>
+        <div id="status">Get ready...</div>
     </div>
 
     <script type="module">
         import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
 
-        // Client automatically detects API key from URL parameter (?key=exp_abc123)
+        // Client automatically extracts API key from URL (?key=your_api_key)
         const client = new WaveClient();
         
-        // Experiment configuration (normally from URL or backend)
-        const experimentId = 123;  // Numeric experiment ID
-        const participantId = 'participant-001';
+        // Experiment configuration
+        const experimentId = 123;  // Your experiment ID
+        const participantId = 'participant-001';  // Unique participant ID
         
         let trialNumber = 1;
         let startTime;
 
-        // Start experiment
         function startTrial() {
             const button = document.getElementById('target');
             const status = document.getElementById('status');
@@ -76,76 +77,9 @@
 </html>
 ```
 
-## JavaScript: jsPsych Integration
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>jsPsych + WAVE Experiment</title>
-    <script src="https://unpkg.com/jspsych@7.3.0"></script>
-    <script type="module">
-        import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
-
-        const client = new WaveClient();
-        const experimentId = 123;
-        const participantId = 'participant-001';
-
-        // jsPsych experiment timeline
-        const timeline = [];
-
-        // Instructions
-        const instructions = {
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: `
-                <p>In this experiment, you will see words in different colors.</p>
-                <p>Press <strong>R</strong> if the word is red, <strong>B</strong> if blue.</p>
-                <p>Press any key to begin.</p>
-            `
-        };
-        timeline.push(instructions);
-
-        // Stroop trials
-        const stimuli = [
-            { word: 'RED', color: 'red', congruent: true },
-            { word: 'BLUE', color: 'blue', congruent: true },
-            { word: 'RED', color: 'blue', congruent: false },
-            { word: 'BLUE', color: 'red', congruent: false }
-        ];
-
-        for (let i = 0; i < stimuli.length; i++) {
-            const trial = {
-                type: jsPsychHtmlKeyboardResponse,
-                stimulus: `<p style="color: ${stimuli[i].color}; font-size: 48px;">${stimuli[i].word}</p>`,
-                choices: ['r', 'b'],
-                data: {
-                    word: stimuli[i].word,
-                    color: stimuli[i].color,
-                    congruent: stimuli[i].congruent,
-                    trial_number: i + 1
-                },
-                on_finish: async function(data) {
-                    // Convert jsPsych data to WAVE format and log
-                    const waveData = client.fromJsPsychData(data);
-                    
-                    try {
-                        await client.logExperimentData(experimentId, participantId, waveData);
-                        console.log('Trial data logged successfully');
-                    } catch (error) {
-                        console.error('Failed to log trial data:', error);
-                    }
-                }
-            };
-            timeline.push(trial);
-        }
-
-        // Run experiment
-        jsPsych.run(timeline);
-    </script>
-</head>
-<body></body>
-</html>
-```
+**URL Setup**: Make sure your experiment URL includes the API key:
+- ✅ `https://your-site.com/experiment.html?key=exp_abc123`
+- ✅ `https://your-site.com/experiment.html?key=exp_abc123&participant=P001`
 
 ## Python: Basic Data Analysis
 

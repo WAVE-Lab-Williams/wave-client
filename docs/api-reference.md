@@ -32,25 +32,6 @@ await client.logExperimentData(123, 'participant-001', {
 });
 ```
 
-### fromJsPsychData(jsPsychData)
-
-Converts jsPsych trial data to WAVE format.
-
-```javascript
-// jsPsych trial data
-const trialData = {
-    rt: 1234,                    // Reaction time in milliseconds
-    correct: true,
-    trial_type: 'html-keyboard-response',
-    stimulus: '<p>Hello</p>',
-    response: 'f'
-};
-
-// Convert to WAVE format
-const waveData = client.fromJsPsychData(trialData);
-// Result: { reaction_time: 1.234, correct: true, trial_type: 'html-keyboard-response', ... }
-```
-
 ### Utility Methods
 
 ```javascript

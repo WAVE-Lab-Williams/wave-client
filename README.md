@@ -27,6 +27,10 @@ Add this to your HTML experiment:
 </script>
 ```
 
+**Important**: Add your API key to the experiment URL:
+- `https://your-site.com/experiment.html?key=exp_abc123`
+- The client automatically extracts the key from the `?key=` parameter
+
 > **💡 Tip**: Replace `v1.0.0` with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases)
 
 ## For Analyzing Data (Python)

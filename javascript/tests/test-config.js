@@ -43,18 +43,6 @@ export const MOCK_DATA = {
     stimulus_type: 'visual'
   },
 
-  // Mock jsPsych trial data
-  jsPsychTrialData: {
-    rt: 1234,           // Reaction time in milliseconds
-    response: 'correct',
-    correct: true,
-    stimulus: 'target_image.png',
-    trial_type: 'image-keyboard-response',
-    trial_index: 0,
-    time_elapsed: 5432,
-    internal_node_id: '0.0-0.0'
-  },
-
   // Mock API responses
   successResponse: {
     id: 1,
