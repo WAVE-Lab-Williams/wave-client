@@ -50,7 +50,7 @@ jobs:
 
       # Set up Python for backend
       - name: Install uv for backend
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
 
