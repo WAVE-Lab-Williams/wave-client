@@ -91,7 +91,7 @@ client = WaveClient(
 data = client.experiment_data.list_as_dataframe(experiment_id=123)
 
 # Add new data row
-new_row = client.experiment_data.add(
+new_row = client.experiment_data.create(
     experiment_id=123,
     participant_id='p001',
     data={'reaction_time': 1.234, 'correct': True}
@@ -115,11 +115,11 @@ experiments = client.experiments.list_as_dataframe()
 experiment = client.experiments.get(123)
 
 # Create new experiment
-new_exp = client.experiments.create({
-    'name': 'Stroop Task',
-    'description': 'Color-word interference study',
-    'experiment_type_id': 1
-})
+new_exp = client.experiments.create(
+    name='Stroop Task',
+    description='Color-word interference study',
+    experiment_type_id=1
+)
 ```
 
 ### Experiment Types
@@ -140,10 +140,10 @@ schema = client.experiment_types.get_schema(1)
 tags = client.tags.list_as_dataframe()
 
 # Create new tag
-tag = client.tags.create({
-    'name': 'cognitive',
-    'description': 'Cognitive psychology experiments'
-})
+tag = client.tags.create(
+    name='cognitive',
+    description='Cognitive psychology experiments'
+)
 
 # Search tags
 results = client.tags.search('cognitive')

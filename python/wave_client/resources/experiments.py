@@ -10,17 +10,31 @@ from wave_client.resources.base import BaseResource
 class ExperimentsResource(BaseResource):
     """Resource for managing experiments."""
 
-    async def create(self, experiment_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create(
+        self,
+        experiment_type_id: int,
+        description: str,
+        tags: Optional[List[str]] = None,
+        additional_data: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Create a new experiment.
 
         Args:
-            experiment_data: Experiment creation data.
+            experiment_type_id: Experiment type ID (must be > 0).
+            description: Experiment description.
+            tags: List of tags (max 10).
+            additional_data: Additional metadata.
 
         Returns:
             Created experiment response.
         """
         # Validate input data
-        validated_data = ExperimentCreate(**experiment_data)
+        validated_data = ExperimentCreate(
+            experiment_type_id=experiment_type_id,
+            description=description,
+            tags=tags or [],
+            additional_data=additional_data or {},
+        )
 
         return await self._request(
             "POST", "/api/v1/experiments/", json_data=validated_data.model_dump()
@@ -72,18 +86,30 @@ class ExperimentsResource(BaseResource):
 
         return await self._request("GET", "/api/v1/experiments/", params=params)
 
-    async def update(self, experiment_uuid: str, update_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def update(
+        self,
+        experiment_uuid: str,
+        description: Optional[str] = None,
+        tags: Optional[List[str]] = None,
+        additional_data: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Update experiment.
 
         Args:
             experiment_uuid: Experiment UUID.
-            update_data: Update data.
+            description: Experiment description.
+            tags: List of tags (max 10).
+            additional_data: Additional metadata.
 
         Returns:
             Updated experiment response.
         """
         # Validate input data
-        validated_data = ExperimentUpdate(**update_data)
+        validated_data = ExperimentUpdate(
+            description=description,
+            tags=tags,
+            additional_data=additional_data,
+        )
 
         return await self._request(
             "PUT",

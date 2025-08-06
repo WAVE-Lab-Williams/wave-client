@@ -358,8 +358,8 @@ javascript/
 **Tasks:**
 - [x] Create standalone HTML example with jsPsych integration
 - [x] Build Python data analysis example notebook
-- [ ] Create end-to-end workflow examples
-- [ ] Document common usage patterns
+- [x] Create end-to-end workflow examples
+- [x] Document common usage patterns
 
 ---
 

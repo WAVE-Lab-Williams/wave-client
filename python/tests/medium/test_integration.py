@@ -34,7 +34,12 @@ class TestExperimentTypesIntegration:
     async def test_experiment_type_lifecycle(self, integration_client, sample_experiment_type_data):
         """Test complete experiment type lifecycle: create, read, update, delete."""
         # Create
-        created = await integration_client.experiment_types.create(sample_experiment_type_data)
+        created = await integration_client.experiment_types.create(
+            name=sample_experiment_type_data["name"],
+            table_name=sample_experiment_type_data["table_name"],
+            schema_definition=sample_experiment_type_data["schema_definition"],
+            description=sample_experiment_type_data.get("description"),
+        )
         assert "id" in created
         exp_type_id = created["id"]
 
@@ -45,9 +50,10 @@ class TestExperimentTypesIntegration:
             assert retrieved["table_name"] == sample_experiment_type_data["table_name"]
 
             # Update
-            update_data = {"description": "Updated integration test description"}
-            updated = await integration_client.experiment_types.update(exp_type_id, update_data)
-            assert updated["description"] == update_data["description"]
+            updated = await integration_client.experiment_types.update(
+                exp_type_id, description="Updated integration test description"
+            )
+            assert updated["description"] == "Updated integration test description"
 
             # List as DataFrame
             df = await integration_client.experiment_types.list_as_dataframe()
@@ -76,25 +82,34 @@ class TestExperimentsIntegration:
     ):
         """Test complete experiment workflow with data logging."""
         # First create experiment type
-        exp_type = await integration_client.experiment_types.create(sample_experiment_type_data)
+        exp_type = await integration_client.experiment_types.create(
+            name=sample_experiment_type_data["name"],
+            table_name=sample_experiment_type_data["table_name"],
+            schema_definition=sample_experiment_type_data["schema_definition"],
+            description=sample_experiment_type_data.get("description"),
+        )
         exp_type_id = exp_type["id"]
 
         try:
             # Create experiment
-            experiment_data = {**sample_experiment_data, "experiment_type_id": exp_type_id}
-            created_exp = await integration_client.experiments.create(experiment_data)
+            created_exp = await integration_client.experiments.create(
+                experiment_type_id=exp_type_id,
+                description=sample_experiment_data["description"],
+                tags=sample_experiment_data.get("tags", []),
+                additional_data=sample_experiment_data.get("additional_data", {}),
+            )
             exp_uuid = created_exp["uuid"]
 
             try:
                 # Add experiment data
                 for data_row in sample_experiment_data_rows:
-                    # Structure data according to ExperimentDataCreate model
+                    # Structure data according to new kwargs API
                     participant_id = data_row.pop("participant_id")
-                    formatted_data = {
-                        "participant_id": participant_id,
-                        "data": data_row,  # All other fields go into 'data'
-                    }
-                    await integration_client.experiment_data.create(exp_uuid, formatted_data)
+                    await integration_client.experiment_data.create(
+                        experiment_id=exp_uuid,
+                        participant_id=participant_id,
+                        data=data_row,  # All other fields go into 'data'
+                    )
 
                 # Retrieve data as DataFrame
                 df = await integration_client.experiment_data.get_data(exp_uuid)
@@ -137,7 +152,9 @@ class TestTagsIntegration:
     async def test_tags_lifecycle(self, integration_client, sample_tag_data):
         """Test complete tags lifecycle."""
         # Create
-        created = await integration_client.tags.create(sample_tag_data)
+        created = await integration_client.tags.create(
+            name=sample_tag_data["name"], description=sample_tag_data.get("description")
+        )
         tag_id = created["id"]
 
         try:
@@ -151,9 +168,10 @@ class TestTagsIntegration:
             assert tag_id in df["id"].values
 
             # Update
-            update_data = {"description": "Updated integration test tag"}
-            updated = await integration_client.tags.update(tag_id, update_data)
-            assert updated["description"] == update_data["description"]
+            updated = await integration_client.tags.update(
+                tag_id, description="Updated integration test tag"
+            )
+            assert updated["description"] == "Updated integration test tag"
 
         finally:
             # Cleanup
@@ -169,7 +187,12 @@ class TestSearchIntegration:
     ):
         """Test searching experiments by tags."""
         # Create experiment type
-        exp_type = await integration_client.experiment_types.create(sample_experiment_type_data)
+        exp_type = await integration_client.experiment_types.create(
+            name=sample_experiment_type_data["name"],
+            table_name=sample_experiment_type_data["table_name"],
+            schema_definition=sample_experiment_type_data["schema_definition"],
+            description=sample_experiment_type_data.get("description"),
+        )
         exp_type_id = exp_type["id"]
 
         # Create tags for testing
@@ -177,20 +200,20 @@ class TestSearchIntegration:
 
         unique_id = str(uuid.uuid4())[:8]
         tag1 = await integration_client.tags.create(
-            {"name": f"integration_test_{unique_id}", "description": "Tag for integration test"}
+            name=f"integration_test_{unique_id}", description="Tag for integration test"
         )
         tag2 = await integration_client.tags.create(
-            {"name": f"search_test_{unique_id}", "description": "Tag for search test"}
+            name=f"search_test_{unique_id}", description="Tag for search test"
         )
 
         try:
             # Create experiment with specific tags
-            experiment_data = {
-                **sample_experiment_data,
-                "experiment_type_id": exp_type_id,
-                "tags": [tag1["name"], tag2["name"]],
-            }
-            created_exp = await integration_client.experiments.create(experiment_data)
+            created_exp = await integration_client.experiments.create(
+                experiment_type_id=exp_type_id,
+                description=sample_experiment_data["description"],
+                tags=[tag1["name"], tag2["name"]],
+                additional_data=sample_experiment_data.get("additional_data", {}),
+            )
             exp_uuid = created_exp["uuid"]
 
             try:

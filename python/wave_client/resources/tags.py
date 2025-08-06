@@ -1,6 +1,6 @@
 """Tags resource for WAVE client."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 from wave_client.models.base import TagCreate, TagUpdate
@@ -10,17 +10,22 @@ from wave_client.resources.base import BaseResource
 class TagsResource(BaseResource):
     """Resource for managing tags."""
 
-    async def create(self, tag_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create(
+        self,
+        name: str,
+        description: Optional[str] = None,
+    ) -> Dict[str, Any]:
         """Create a new tag.
 
         Args:
-            tag_data: Tag creation data.
+            name: Tag name (max 100 characters).
+            description: Tag description.
 
         Returns:
             Created tag response.
         """
-        # Validate input data
-        validated_data = TagCreate(**tag_data)
+        # Validate input data directly from parameters
+        validated_data = TagCreate(name=name, description=description)
 
         return await self._request("POST", "/api/v1/tags/", json_data=validated_data.model_dump())
 
@@ -48,18 +53,24 @@ class TagsResource(BaseResource):
         params = {"skip": skip, "limit": limit}
         return await self._request("GET", "/api/v1/tags/", params=params)
 
-    async def update(self, tag_id: int, update_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def update(
+        self,
+        tag_id: int,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> Dict[str, Any]:
         """Update tag.
 
         Args:
             tag_id: Tag ID.
-            update_data: Update data.
+            name: Tag name (max 100 characters).
+            description: Tag description.
 
         Returns:
             Updated tag response.
         """
-        # Validate input data
-        validated_data = TagUpdate(**update_data)
+        # Validate input data directly from parameters
+        validated_data = TagUpdate(name=name, description=description)
 
         return await self._request(
             "PUT", f"/api/v1/tags/{tag_id}", json_data=validated_data.model_dump(exclude_none=True)

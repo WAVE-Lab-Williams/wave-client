@@ -1,6 +1,6 @@
 """Experiment types resource for WAVE client."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 from wave_client.models.base import (
@@ -13,17 +13,31 @@ from wave_client.resources.base import BaseResource
 class ExperimentTypesResource(BaseResource):
     """Resource for managing experiment types."""
 
-    async def create(self, experiment_type_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create(
+        self,
+        name: str,
+        table_name: str,
+        schema_definition: Optional[Dict[str, Any]] = None,
+        description: Optional[str] = None,
+    ) -> Dict[str, Any]:
         """Create a new experiment type.
 
         Args:
-            experiment_type_data: Experiment type creation data.
+            name: Experiment type name (max 100 characters).
+            table_name: Database table name (max 100 characters).
+            schema_definition: Column definitions for experiment data.
+            description: Experiment type description.
 
         Returns:
             Created experiment type response.
         """
         # Validate input data
-        validated_data = ExperimentTypeCreate(**experiment_type_data)
+        validated_data = ExperimentTypeCreate(
+            name=name,
+            table_name=table_name,
+            schema_definition=schema_definition or {},
+            description=description,
+        )
 
         return await self._request(
             "POST", "/api/v1/experiment-types/", json_data=validated_data.model_dump()
@@ -53,18 +67,30 @@ class ExperimentTypesResource(BaseResource):
         params = {"skip": skip, "limit": limit}
         return await self._request("GET", "/api/v1/experiment-types/", params=params)
 
-    async def update(self, experiment_type_id: int, update_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def update(
+        self,
+        experiment_type_id: int,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        schema_definition: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Update experiment type.
 
         Args:
             experiment_type_id: Experiment type ID.
-            update_data: Update data.
+            name: Experiment type name (max 100 characters).
+            description: Experiment type description.
+            schema_definition: Column definitions.
 
         Returns:
             Updated experiment type response.
         """
         # Validate input data
-        validated_data = ExperimentTypeUpdate(**update_data)
+        validated_data = ExperimentTypeUpdate(
+            name=name,
+            description=description,
+            schema_definition=schema_definition,
+        )
 
         return await self._request(
             "PUT",
