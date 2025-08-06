@@ -64,22 +64,9 @@ jobs:
           uv venv
           uv pip install -e .[dev,test]
 
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          echo "Waiting for PostgreSQL to be ready..."
-          timeout 30 bash -c 'until pg_isready -h localhost -p 5432 -U ${{ secrets.TEST_POSTGRES_USER }}; do sleep 1; done'
-          echo "PostgreSQL is ready!"
-
       - name: Start backend server
         working-directory: wave-backend
         run: |
-          # Debug environment variables
-          echo "Database connection details:"
-          echo "POSTGRES_USER: $POSTGRES_USER"
-          echo "POSTGRES_HOST: $POSTGRES_HOST"
-          echo "POSTGRES_PORT: $POSTGRES_PORT"
-          echo "POSTGRES_DB: $POSTGRES_DB"
-
           # Start the server in background
           uv run uvicorn wave_backend.api.main:app --host 0.0.0.0 --port 8000 &
 
