@@ -122,8 +122,9 @@ uv pip install -e .[dev,test]
 
 ## Detailed docs
 
-- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
-- [Examples](docs/examples.md) - Working examples of experiments and data analysis
+- **[📖 Full Documentation](docs/)** - Complete API reference and examples
+- **[💡 Examples](docs/examples.md)** - Working examples of experiments and data analysis
+- **[⚙️ Installation Guide](docs/installation.md)** - Detailed setup instructions for both JavaScript and Python
 - [API Reference](docs/api-reference.md) - Complete method documentation
 - [Release Process](docs/releases.md) - How releases are created and versioned
 
@@ -200,13 +201,6 @@ make build-js-watch   # Build JS with auto-rebuild on changes
 # Cleanup
 make clean           # Remove build artifacts, cache files, etc.
 ```
-
-## Need Help?
-
-- **[📖 Full Documentation](docs/)** - Complete API reference and examples
-- **[🛠️ Troubleshooting Guide](docs/troubleshooting.md)** - Common issues and solutions
-- **[💡 Examples](docs/examples.md)** - Working code examples
-- **[⚙️ Installation Guide](docs/installation.md)** - Detailed setup instructions
 
 ---
 
