@@ -45,15 +45,7 @@ jobs:
       - name: Create tag
         id: tag
         if: steps.tag-exists.outputs.exists == 'false'
-        run: echo "🏷️ Creating git tag ${{ steps.package-version.outputs.version }}..."
-
-      - name: Push tag to repository
-        if: steps.tag-exists.outputs.exists == 'false'
-        uses: anothrNick/github-tag-action@1.73.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_TAG: ${{ steps.package-version.outputs.version }}
-          RELEASE_BRANCHES: main
+        run: echo "🏷️ Will create git tag ${{ steps.package-version.outputs.version }}..."
 
   build-javascript:
     name: Build JavaScript Client
@@ -155,6 +147,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download JavaScript artifacts
         uses: actions/download-artifact@v4
@@ -183,24 +177,32 @@ jobs:
           echo "🏷️ Using tag: $TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-      - name: Commit built files to repository
+      - name: Commit built files to release branch
         run: |
-          echo "📝 Committing built files for CDN access..."
+          echo "📝 Committing built files to release branch..."
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          # Force add dist files (even though they're gitignored)
+          # Create or switch to release branch
+          git checkout -B release
+
+          # Add only the dist files (force add since they might be gitignored)
           git add -f javascript/dist/
 
           # Only commit if there are changes
           if ! git diff --staged --quiet; then
-            git commit -m "chore: add built files for release ${{ steps.tag.outputs.tag }}"
+            git commit -m "chore: built files for release ${{ steps.tag.outputs.tag }}"
             
-            # Update the existing tag to include built files
-            git tag -f ${{ steps.tag.outputs.tag }}
-            git push origin ${{ steps.tag.outputs.tag }} --force
+            # Push the release branch
+            git push origin release --force
+            
+            # Create tag on the release branch
+            git tag ${{ steps.tag.outputs.tag }}
+            git push origin ${{ steps.tag.outputs.tag }}
+            
+            echo "✅ Release branch updated and tagged"
           else
-            echo "ℹ️ No changes to commit"
+            echo "ℹ️ No changes to commit to release branch"
           fi
 
       - name: Create Release
@@ -221,4 +223,7 @@ jobs:
         run: |
           echo "🎉 Release ${{ steps.tag.outputs.tag }} created successfully!"
           echo "📦 Release includes JavaScript and Python distribution files"
+          echo "🌐 CDN URLs:"
+          echo "  Latest: https://cdn.jsdelivr.net/gh/${{ github.repository }}@latest/javascript/dist/"
+          echo "  Tagged: https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ steps.tag.outputs.tag }}/javascript/dist/"
           echo "🔗 View release at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.tag.outputs.tag }}"
