@@ -25,20 +25,29 @@ jobs:
       - name: Get package.json version
         id: package-version
         run: |
+          echo "📦 Reading version from package.json..."
           VERSION=$(node -p "require('./package.json').version")
+          echo "✅ Found version: $VERSION"
           echo "version=v$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: tag-exists
         run: |
+          echo "🔍 Checking if tag ${{ steps.package-version.outputs.version }} already exists..."
           if git tag -l | grep -q "^${{ steps.package-version.outputs.version }}$"; then
+            echo "⚠️ Tag ${{ steps.package-version.outputs.version }} already exists - skipping release"
             echo "exists=true" >> $GITHUB_OUTPUT
           else
+            echo "✅ Tag ${{ steps.package-version.outputs.version }} does not exist - proceeding with release"
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Create tag
         id: tag
+        if: steps.tag-exists.outputs.exists == 'false'
+        run: echo "🏷️ Creating git tag ${{ steps.package-version.outputs.version }}..."
+
+      - name: Push tag to repository
         if: steps.tag-exists.outputs.exists == 'false'
         uses: anothrNick/github-tag-action@1.73.0
         env:
@@ -72,10 +81,18 @@ jobs:
           cache-dependency-path: "package-lock.json"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "📦 Installing JavaScript dependencies..."
+          npm ci
+          echo "✅ Dependencies installed successfully"
 
       - name: Build JavaScript bundles
-        run: npm run build:prod
+        run: |
+          echo "🔨 Building JavaScript bundles..."
+          npm run build:prod
+          echo "✅ JavaScript build completed"
+          echo "📁 Built files:"
+          ls -la javascript/dist/
 
       - name: Upload JavaScript artifacts
         uses: actions/upload-artifact@v4
@@ -83,6 +100,9 @@ jobs:
           name: javascript-dist
           path: javascript/dist/
           retention-days: 1
+
+      - name: Confirm JavaScript upload
+        run: echo "📤 JavaScript artifacts uploaded successfully"
 
   build-python:
     name: Build Python Client
@@ -99,13 +119,24 @@ jobs:
           version: "latest"
 
       - name: Set up Python
-        run: uv python install 3.12
+        run: |
+          echo "🐍 Setting up Python 3.12..."
+          uv python install 3.12
+          echo "✅ Python setup completed"
 
       - name: Install dependencies
-        run: uv sync
+        run: |
+          echo "📦 Installing Python dependencies..."
+          uv sync
+          echo "✅ Dependencies installed successfully"
 
       - name: Build Python wheel
-        run: uv build
+        run: |
+          echo "🔨 Building Python wheel..."
+          uv build
+          echo "✅ Python build completed"
+          echo "📁 Built files:"
+          ls -la dist/
 
       - name: Upload Python artifacts
         uses: actions/upload-artifact@v4
@@ -113,6 +144,9 @@ jobs:
           name: python-dist
           path: dist/
           retention-days: 1
+
+      - name: Confirm Python upload
+        run: echo "📤 Python artifacts uploaded successfully"
 
   create-release:
     name: Create GitHub Release
@@ -134,10 +168,20 @@ jobs:
           name: python-dist
           path: python-dist/
 
+      - name: Verify downloaded artifacts
+        run: |
+          echo "📁 Verifying downloaded artifacts..."
+          echo "JavaScript files:"
+          ls -la javascript-dist/
+          echo "Python files:"
+          ls -la python-dist/
+
       - name: Determine tag
         id: tag
         run: |
-          echo "tag=${{ needs.check-and-tag.outputs.new-tag }}" >> $GITHUB_OUTPUT
+          TAG="${{ needs.check-and-tag.outputs.new-tag }}"
+          echo "🏷️ Using tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -152,3 +196,9 @@ jobs:
             python-dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release created successfully
+        run: |
+          echo "🎉 Release ${{ steps.tag.outputs.tag }} created successfully!"
+          echo "📦 Release includes JavaScript and Python distribution files"
+          echo "🔗 View release at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.tag.outputs.tag }}"
