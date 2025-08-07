@@ -49,10 +49,15 @@
 <body>
     <h1>Simple Reaction Time Experiment</h1>
 
-    <div class="info">
+    <div id="url-setup" class="info">
         <strong>URL Setup Required:</strong><br>
-        This experiment needs an API key in the URL. Add <code>?key=your_api_key</code> to the URL.<br>
-        Example: <code>file:///path/to/this/file.html?key=exp_abc123</code>
+        This experiment needs URL parameters:<br>
+        • <code>key=your_api_key</code> - Your WAVE API key<br>
+        • <code>experiment_id=experiment_uuid</code> - The experiment ID<br>
+        • <code>participant_id=participant_name</code> - Unique participant identifier<br>
+        <br>
+        <strong>Example:</strong><br>
+        <code>file:///path/to/file.html?key=your_key&experiment_id=123&participant_id=P001</code>
     </div>
 
     <div id="experiment" style="display: none;">
@@ -62,31 +67,53 @@
     </div>
 
     <script type="module">
-        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@latest/javascript/dist/wave-client.esm.js';
+        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
 
-        // Configuration - update these for your experiment
-        const EXPERIMENT_ID = 123;  // Replace with your experiment ID
-        const PARTICIPANT_ID = 'demo-participant';  // Replace with actual participant ID
+        // Configuration - get from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const API_KEY = urlParams.get('key');
+        const EXPERIMENT_ID = urlParams.get('experiment_id');
+        const PARTICIPANT_ID = urlParams.get('participant_id');
+
+        console.log('🔍 Full URL:', window.location.href);
+        console.log('🔍 Search params:', window.location.search);
+        console.log('🔍 URL Params object:', urlParams.toString());
+        console.log('API Key:', API_KEY ? 'Found (length: ' + API_KEY.length + ')' : 'Missing');
+        console.log('Experiment ID:', EXPERIMENT_ID || 'Missing');
+        console.log('Participant ID:', PARTICIPANT_ID || 'Missing');
+
+        // Check if all required parameters are present
+        if (!API_KEY || !EXPERIMENT_ID || !PARTICIPANT_ID) {
+            console.error('Missing required URL parameters');
+            document.getElementById('url-setup').style.display = 'block';
+            document.getElementById('experiment').style.display = 'none';
+        } else {
+            // Hide setup instructions and show experiment
+            document.getElementById('url-setup').style.display = 'none';
+            document.getElementById('experiment').style.display = 'block';
+        }
 
         let client;
         let trialNumber = 1;
         let startTime;
 
-        // Initialize the client
+        // Initialize the client with API key
         try {
-            client = new WaveClient();
-            console.log('✓ WAVE client initialized');
+            if (API_KEY) {
+                client = new WaveClient({
+                    apiKey: API_KEY,
+                    baseUrl: 'http://localhost:8000'
+                });
+                console.log('✓ WAVE client initialized with API key');
 
-            // Show the experiment
-            document.getElementById('experiment').style.display = 'block';
-
-            // Test connection
-            client.getHealth().then(health => {
-                console.log('✓ Backend connection:', health);
-            }).catch(error => {
-                console.warn('⚠ Backend connection failed:', error.message);
-                showError('Warning: Could not connect to backend. Data logging may fail.');
-            });
+                // Test connection
+                client.getHealth().then(health => {
+                    console.log('✓ Backend connection:', health);
+                }).catch(error => {
+                    console.warn('⚠ Backend connection failed:', error.message);
+                    showError('Warning: Could not connect to backend. Data logging may fail.');
+                });
+            }
 
         } catch (error) {
             console.error('✗ Failed to initialize WAVE client:', error.message);
@@ -124,9 +151,13 @@
             try {
                 // Log data to WAVE backend
                 const response = await client.logExperimentData(EXPERIMENT_ID, PARTICIPANT_ID, {
-                    reaction_time: reactionTime,
                     trial_number: trialNumber,
-                    timestamp: new Date().toISOString()
+                    reaction_time: reactionTime,
+                    stimulus_color: "red",  // Simple red stimulus
+                    response_key: "click",  // Mouse click response
+                    accuracy: true,  // Assume correct for simple click task
+                    timestamp: new Date().toISOString(),
+                    user_agent: navigator.userAgent
                 });
 
                 console.log('✓ Data logged successfully:', response);
@@ -154,9 +185,12 @@
             }
         }
 
-        // Start first trial
-        if (client) {
+        // Start first trial if everything is set up
+        if (API_KEY && EXPERIMENT_ID && PARTICIPANT_ID && client) {
+            console.log('🚀 Starting experiment...');
             startTrial();
+        } else {
+            console.log('❌ Cannot start experiment - missing parameters or client not initialized');
         }
     </script>
 </body>

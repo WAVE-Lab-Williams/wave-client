@@ -2,7 +2,7 @@
 
 ## Overview
 
-The WAVE Client uses a fully automated release system that builds and distributes both JavaScript and Python clients whenever a new version is detected on the main branch.
+The WAVE Client uses a fully automated release system that builds and distributes both JavaScript and Python clients whenever a new v3. **Tag Content**: Verify built files are present in the release branch at the tagged commitrsion is detected on the main branch. The system creates CDN-ready JavaScript builds and Python wheels distributed via GitHub releases.
 
 ## Release Workflow
 
@@ -42,29 +42,85 @@ git push origin main
 ### 3. Automatic Processing
 The GitHub Actions workflow will:
 1. **Detect** the version change
-2. **Create** git tag (e.g., `v1.1.0`)
-3. **Build** JavaScript bundles and Python wheels
-4. **Publish** GitHub release with attached assets
+2. **Build** JavaScript bundles and Python wheels
+3. **Create** release branch with built files committed
+4. **Create** git tag (e.g., `v1.1.0`) on the release branch
+5. **Publish** GitHub release with attached assets
 
-## Build Artifacts
+## Build Artifacts & Distribution
 
 ### JavaScript Distribution
-Built files are created in `javascript/dist/`:
-- `wave-client.esm.js` - ES6 module format
+Built files are created in `javascript/dist/` and committed to the release branch for CDN access:
+
+**CDN URLs** (available via jsDelivr):
+```
+https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js
+https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.umd.js
+https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.umd.min.js
+```
+
+**Built Files**:
+- `wave-client.esm.js` - ES6 module format (recommended)
 - `wave-client.umd.js` - Universal module format
 - `wave-client.umd.min.js` - Minified UMD build
 - Source maps for all builds
 
+**Usage in HTML**:
+```html
+<script type="module">
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
+  const client = new WaveClient({ apiKey: 'your-key' });
+</script>
+```
+
 ### Python Distribution  
-Built files are created in `dist/`:
+Built files are created in standard `dist/` folder and distributed via GitHub releases:
+
+**Installation Options**:
+```bash
+# Option 1: Install wheel from GitHub release assets (pip)
+pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl
+
+# Option 2: Install wheel from GitHub release assets (uv)
+uv pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl
+
+# Option 3: Install directly from GitHub repository (uv)
+uv pip install git+https://github.com/WAVE-Lab-Williams/wave-client.git@v1.0.0
+```
+
+**Built Files**:
 - `wave_client-{version}-py3-none-any.whl` - Python wheel package
 
 ## Release Assets
 
 All built files are automatically attached to the GitHub release:
-- **JavaScript**: All files from `javascript/dist/`
+- **JavaScript**: All files from `javascript/dist/` (also committed to tag for CDN)
 - **Python**: All `.whl` files from `dist/`
 - **Release Notes**: Auto-generated from commit messages
+
+## CDN Availability
+
+### JavaScript Files
+JavaScript builds are automatically available via CDN after release:
+
+**jsDelivr CDN**:
+- Updates within minutes of release
+- Serves files directly from GitHub repository
+- Global CDN with high availability
+
+**Testing CDN Access**:
+```bash
+# Test if file is available
+curl -I "https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js"
+
+# Should return 200 OK
+```
+
+### Repository Structure
+- **Development**: `javascript/dist/` is gitignored (clean repo)
+- **Release Branch**: Built files committed to separate `release` branch for CDN access
+- **Main Branch**: No built files (clean for developers)
+- **Tags**: Created on release branch pointing to commits with built files
 
 ## Versioning Strategy
 
@@ -117,8 +173,26 @@ All built files are automatically attached to the GitHub release:
 ### Release Verification
 After release creation, verify:
 1. **GitHub Release**: Check release page for attached assets
-2. **jsDelivr CDN**: Test JavaScript file availability
+2. **jsDelivr CDN**: Test JavaScript file availability (may take 5-10 minutes)
 3. **Python Wheel**: Test wheel file download and installation
+4. **Tag Content**: Verify built files are present in the tagged commit
+
+**CDN Verification Commands**:
+```bash
+# Check JavaScript CDN availability
+curl "https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js"
+
+# Check Python installation options
+# Option 1: Test wheel download and pip installation
+wget "https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl"
+pip install wave_client-1.0.0-py3-none-any.whl
+
+# Option 2: Test wheel installation with uv
+uv pip install https://github.com/WAVE-Lab-Williams/wave-client/releases/download/v1.0.0/wave_client-1.0.0-py3-none-any.whl
+
+# Option 3: Test direct repository installation with uv
+uv pip install git+https://github.com/WAVE-Lab-Williams/wave-client.git@v1.0.0
+```
 
 ## Security Considerations
 
@@ -143,10 +217,35 @@ Before bumping version:
 
 ### Post-Release Validation
 After automatic release:
-1. Test JavaScript CDN URLs in browser
-2. Install and test Python wheel
-3. Verify documentation matches released version
-4. Update any dependent projects
+1. **Test JavaScript CDN URLs** in browser console
+2. **Install and test Python wheel** locally
+3. **Verify documentation** matches released version
+4. **Test integration examples** with new CDN URLs
+5. **Update dependent projects** to use new version
+
+**JavaScript Testing**:
+```html
+<!-- Test in browser -->
+<script type="module">
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.1.0/javascript/dist/wave-client.esm.js';
+  console.log('CDN test:', new WaveClient());
+</script>
+```
+
+**Python Testing**:
+```bash
+# Option 1: Test wheel installation with pip
+pip install wave_client-1.1.0-py3-none-any.whl
+python -c "from wave_client import WaveClient; print('Wheel test (pip):', WaveClient)"
+
+# Option 2: Test wheel installation with uv
+uv pip install wave_client-1.1.0-py3-none-any.whl
+python -c "from wave_client import WaveClient; print('Wheel test (uv):', WaveClient)"
+
+# Option 3: Test direct repository installation with uv
+uv pip install git+https://github.com/WAVE-Lab-Williams/wave-client.git@v1.1.0
+python -c "from wave_client import WaveClient; print('Repository test (uv):', WaveClient)"
+```
 
 ## Related Documentation
 
