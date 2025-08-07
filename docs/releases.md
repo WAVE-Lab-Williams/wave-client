@@ -7,7 +7,6 @@ The WAVE Client uses a fully automated release system that builds and distribute
 ## Release Workflow
 
 ### Automated Triggers
-- **CI Success**: Release only runs after all CI workflows (JavaScript CI, Python CI, Integration Tests) pass
 - **Version Change**: Release only creates when `package.json` version differs from existing git tags
 - **Main Branch**: Only releases from commits on the `main` branch
 
@@ -43,10 +42,9 @@ git push origin main
 ### 3. Automatic Processing
 The GitHub Actions workflow will:
 1. **Detect** the version change
-2. **Wait** for all CI tests to pass
-3. **Create** git tag (e.g., `v1.1.0`)
-4. **Build** JavaScript bundles and Python wheels
-5. **Publish** GitHub release with attached assets
+2. **Create** git tag (e.g., `v1.1.0`)
+3. **Build** JavaScript bundles and Python wheels
+4. **Publish** GitHub release with attached assets
 
 ## Build Artifacts
 
@@ -91,9 +89,9 @@ All built files are automatically attached to the GitHub release:
 ### Release Not Triggered
 **Problem**: New version committed but no release created
 **Solutions**:
-1. Check that CI workflows passed successfully
-2. Verify version in `package.json` is different from existing tags
-3. Ensure commit is on `main` branch
+1. Verify version in `package.json` is different from existing tags
+2. Ensure commit is on `main` branch
+3. Check GitHub Actions workflow logs for errors
 
 ### Build Failures
 **Problem**: Release workflow fails during build
