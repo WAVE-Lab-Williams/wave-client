@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Wait for CI workflows to complete successfully
-        uses: lewagon/wait-on-check-action@v1.3.4
+        uses: lewagon/wait-on-check-action@v1.4.0
         with:
           ref: ${{ github.sha }}
-          check-regexp: '^(JavaScript CI|Python CI|Integration Tests)$'
+          check-regexp: "^(JavaScript CI|Python CI|Integration Tests)$"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 30
-          running-workflow-name: 'Wait for CI Workflows'
+          running-workflow-name: "Wait for CI Workflows"
           allowed-conclusions: success
 
   # Check if version changed and create tag
