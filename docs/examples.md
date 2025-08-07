@@ -83,7 +83,7 @@ Add your API key to the URL as a query parameter: `?key=your_api_key_here`
 
 ## Python: Basic Data Analysis
 
-View the example notebook in `python/examples/data_analysis_example.ipynb`
+View the notebooks in `wave-client/python/examples`
 
 ## Installation
 

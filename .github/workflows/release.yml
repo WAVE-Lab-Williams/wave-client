@@ -160,7 +160,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: javascript-dist
-          path: javascript-dist/
+          path: javascript/dist/
 
       - name: Download Python artifacts
         uses: actions/download-artifact@v4
@@ -172,7 +172,7 @@ jobs:
         run: |
           echo "📁 Verifying downloaded artifacts..."
           echo "JavaScript files:"
-          ls -la javascript-dist/
+          ls -la javascript/dist/
           echo "Python files:"
           ls -la python-dist/
 
@@ -183,6 +183,26 @@ jobs:
           echo "🏷️ Using tag: $TAG"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
+      - name: Commit built files to repository
+        run: |
+          echo "📝 Committing built files for CDN access..."
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Force add dist files (even though they're gitignored)
+          git add -f javascript/dist/
+
+          # Only commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: add built files for release ${{ steps.tag.outputs.tag }}"
+            
+            # Update the existing tag to include built files
+            git tag -f ${{ steps.tag.outputs.tag }}
+            git push origin ${{ steps.tag.outputs.tag }} --force
+          else
+            echo "ℹ️ No changes to commit"
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -192,7 +212,7 @@ jobs:
           prerelease: false
           generate_release_notes: true
           files: |
-            javascript-dist/*
+            javascript/dist/*
             python-dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
