@@ -2,7 +2,7 @@
 
 ## Overview
 
-The WAVE Client uses a fully automated release system that builds and distributes both JavaScript and Python clients whenever a new version is detected on the main branch. The system creates CDN-ready JavaScript builds and Python wheels distributed via GitHub releases.
+The WAVE Client uses a fully automated release system that builds and distributes both JavaScript and Python clients whenever a new v3. **Tag Content**: Verify built files are present in the release branch at the tagged commitrsion is detected on the main branch. The system creates CDN-ready JavaScript builds and Python wheels distributed via GitHub releases.
 
 ## Release Workflow
 
@@ -42,15 +42,15 @@ git push origin main
 ### 3. Automatic Processing
 The GitHub Actions workflow will:
 1. **Detect** the version change
-2. **Create** git tag (e.g., `v1.1.0`)
-3. **Build** JavaScript bundles and Python wheels
-4. **Commit built files** to the release tag (for CDN access)
+2. **Build** JavaScript bundles and Python wheels
+3. **Create** release branch with built files committed
+4. **Create** git tag (e.g., `v1.1.0`) on the release branch
 5. **Publish** GitHub release with attached assets
 
 ## Build Artifacts & Distribution
 
 ### JavaScript Distribution
-Built files are created in `javascript/dist/` and committed to release tags for CDN access:
+Built files are created in `javascript/dist/` and committed to the release branch for CDN access:
 
 **CDN URLs** (available via jsDelivr):
 ```
@@ -118,8 +118,9 @@ curl -I "https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javasc
 
 ### Repository Structure
 - **Development**: `javascript/dist/` is gitignored (clean repo)
-- **Releases**: Built files committed to release tags only (CDN access)
+- **Release Branch**: Built files committed to separate `release` branch for CDN access
 - **Main Branch**: No built files (clean for developers)
+- **Tags**: Created on release branch pointing to commits with built files
 
 ## Versioning Strategy
 
