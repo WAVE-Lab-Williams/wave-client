@@ -125,6 +125,7 @@ uv pip install -e .[dev,test]
 - [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
 - [Examples](docs/examples.md) - Working examples of experiments and data analysis
 - [API Reference](docs/api-reference.md) - Complete method documentation
+- [Release Process](docs/releases.md) - How releases are created and versioned
 
 
 ## For Developers
