@@ -13,6 +13,9 @@
  * - Prevents accidental exposure in version control
  *
  * @example
+ * // Import using default export syntax
+ * import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
+ *
  * // URL-based authentication (recommended)
  * // URL: https://experiment-site.com/task.html?key=exp_abc123&participant=P001
  * const client = new WaveClient();

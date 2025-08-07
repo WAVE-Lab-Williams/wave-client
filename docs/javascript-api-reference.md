@@ -1,3 +1,26 @@
+# JavaScript API Reference
+
+## Quick Start
+
+```html
+<script type="module">
+  import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
+  
+  const client = new WaveClient({
+    apiKey: 'your-api-key',      // Optional: auto-extracts from URL ?key=
+    baseUrl: 'http://localhost:8000'  // Optional: defaults to localhost:8000
+  });
+  
+  // Log experiment data
+  await client.logExperimentData(experimentId, participantId, {
+    reaction_time: 1.23,
+    trial_number: 1
+  });
+</script>
+```
+
+**Important**: `WaveClient` is exported as the **default export**, so use `import WaveClient from '...'` (not `import { WaveClient }`).
+
 ## Classes
 
 <dl>
@@ -37,11 +60,11 @@ Primary method: Log experiment data
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - Created data row with all fields  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| experimentId | <code>string</code> | Experiment UUID |
-| participantId | <code>string</code> | Participant identifier |
-| data | <code>Object</code> | Experiment data matching the experiment type schema |
+| Param         | Type                | Description                                         |
+| ------------- | ------------------- | --------------------------------------------------- |
+| experimentId  | <code>string</code> | Experiment UUID                                     |
+| participantId | <code>string</code> | Participant identifier                              |
+| data          | <code>Object</code> | Experiment data matching the experiment type schema |
 
 <a name="getHealth"></a>
 
@@ -64,8 +87,8 @@ Update base URL
 
 **Kind**: global function  
 
-| Param | Type | Description |
-| --- | --- | --- |
+| Param   | Type                | Description  |
+| ------- | ------------------- | ------------ |
 | baseUrl | <code>string</code> | New base URL |
 
 <a name="createErrorFromResponse"></a>
@@ -76,10 +99,10 @@ Create appropriate error from HTTP response
 **Kind**: global function  
 **Returns**: [<code>WaveClientError</code>](#WaveClientError) - Appropriate error instance  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| response | <code>Response</code> | Fetch API response |
-| errorData | <code>Object</code> | Parsed error response body |
+| Param     | Type                  | Description                |
+| --------- | --------------------- | -------------------------- |
+| response  | <code>Response</code> | Fetch API response         |
+| errorData | <code>Object</code>   | Parsed error response body |
 
 <a name="parseRetryAfter"></a>
 
@@ -89,7 +112,7 @@ Parse Retry-After header value to milliseconds
 **Kind**: global function  
 **Returns**: <code>number</code> - Retry delay in milliseconds  
 
-| Param | Type | Description |
-| --- | --- | --- |
+| Param            | Type                                     | Description              |
+| ---------------- | ---------------------------------------- | ------------------------ |
 | retryAfterHeader | <code>string</code> \| <code>null</code> | Retry-After header value |
 

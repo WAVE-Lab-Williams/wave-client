@@ -14,7 +14,7 @@ Add this to your HTML experiment:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+  import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
 
   const client = new WaveClient();  // Auto-extracts API key from URL ?key=exp_abc123
 
@@ -122,8 +122,9 @@ uv pip install -e .[dev,test]
 
 ## Detailed docs
 
-- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
-- [Examples](docs/examples.md) - Working examples of experiments and data analysis
+- **[📖 Full Documentation](docs/)** - Complete API reference and examples
+- **[💡 Examples](docs/examples.md)** - Working examples of experiments and data analysis
+- **[⚙️ Installation Guide](docs/installation.md)** - Detailed setup instructions for both JavaScript and Python
 - [API Reference](docs/api-reference.md) - Complete method documentation
 - [Release Process](docs/releases.md) - How releases are created and versioned
 
