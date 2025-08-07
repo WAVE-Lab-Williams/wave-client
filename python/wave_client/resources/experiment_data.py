@@ -16,18 +16,24 @@ from wave_client.resources.base import BaseResource
 class ExperimentDataResource(BaseResource):
     """Resource for managing experiment data."""
 
-    async def create(self, experiment_id: str, data_row: Dict[str, Any]) -> Dict[str, Any]:
+    async def create(
+        self,
+        experiment_id: str,
+        participant_id: str,
+        data: Dict[str, Any],
+    ) -> Dict[str, Any]:
         """Add new data row to experiment.
 
         Args:
             experiment_id: Experiment ID (UUID string).
-            data_row: Data row creation data.
+            participant_id: Participant identifier (max 100 characters).
+            data: Experiment data matching type schema.
 
         Returns:
             Complete data row with all fields.
         """
         # Validate input data
-        validated_data = ExperimentDataCreate(**data_row)
+        validated_data = ExperimentDataCreate(participant_id=participant_id, data=data)
 
         return await self._request(
             "POST",
@@ -150,20 +156,25 @@ class ExperimentDataResource(BaseResource):
         )
 
     async def update_row(
-        self, experiment_id: str, row_id: int, update_data: Dict[str, Any]
+        self,
+        experiment_id: str,
+        row_id: int,
+        participant_id: Optional[str] = None,
+        data: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Update specific data row.
 
         Args:
             experiment_id: Experiment ID (UUID string).
             row_id: Data row ID.
-            update_data: Update data.
+            participant_id: Participant identifier (max 100 characters).
+            data: Experiment data updates.
 
         Returns:
             Updated row data.
         """
         # Validate input data
-        validated_data = ExperimentDataUpdate(**update_data)
+        validated_data = ExperimentDataUpdate(participant_id=participant_id, data=data)
 
         return await self._request(
             "PUT",
@@ -235,14 +246,18 @@ class ExperimentDataResource(BaseResource):
 
         Args:
             experiment_id: Experiment ID (UUID string).
-            data_rows: List of data row creation data.
+            data_rows: List of data row creation data. Each row should contain
+                      'participant_id' and other data fields.
 
         Returns:
             List of created data rows.
         """
         results = []
         for data_row in data_rows:
-            result = await self.create(experiment_id, data_row)
+            # Extract participant_id from data_row
+            participant_id = data_row.pop("participant_id")
+            # Remaining data_row content becomes the data
+            result = await self.create(experiment_id, participant_id, data_row)
             results.append(result)
         return results
 

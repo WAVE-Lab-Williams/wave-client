@@ -1,0 +1,118 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "python/**"
+      - "javascript/**"
+      - ".github/workflows/integration-tests.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "python/**"
+      - "javascript/**"
+      - ".github/workflows/integration-tests.yml"
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  integration-tests:
+    name: "Integration Tests with Backend"
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ secrets.TEST_POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.TEST_POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout client repository
+        uses: actions/checkout@v4
+        with:
+          path: wave-client
+
+      - name: Checkout backend repository
+        uses: actions/checkout@v4
+        with:
+          repository: WAVE-Lab-Williams/wave-backend
+          path: wave-backend
+
+      # Set up Python for backend
+      - name: Install uv for backend
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+
+      - name: Set up Python for backend
+        run: uv python install 3.12
+
+      # Set up backend dependencies and start server
+      - name: Install backend dependencies
+        working-directory: wave-backend
+        run: |
+          uv venv
+          uv pip install -e .[dev,test]
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 10
+          timeout 30 bash -c 'until pg_isready -h localhost -p 5432; do sleep 1; done'
+          echo "PostgreSQL is ready!"
+
+      - name: Start backend server
+        working-directory: wave-backend
+        run: |
+          # Start the server in background
+          uv run uvicorn wave_backend.api.main:app --host 0.0.0.0 --port 8000 &
+
+          # Wait for server to be ready
+          timeout 30 bash -c 'until curl -f http://localhost:8000/health; do sleep 1; done'
+        env:
+          DATABASE_URL: postgresql+asyncpg://${{ secrets.TEST_POSTGRES_USER }}:${{ secrets.TEST_POSTGRES_PASSWORD }}@localhost:5432/${{ secrets.TEST_POSTGRES_DB }}
+          WAVE_API_KEY: ${{ secrets.WAVE_API_KEY }}
+          ROOT_VALIDATOR_KEY: ${{ secrets.ROOT_VALIDATOR_KEY }}
+
+      # Set up Node.js for JavaScript client tests
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "wave-client/.nvmrc"
+          cache: "npm"
+          cache-dependency-path: "wave-client/package-lock.json"
+
+      - name: Install JavaScript dependencies
+        working-directory: wave-client
+        run: npm ci
+
+      # Run JavaScript integration tests
+      - name: Run JavaScript integration tests
+        working-directory: wave-client
+        run: npm run test:medium
+        env:
+          WAVE_API_KEY: ${{ secrets.WAVE_API_KEY }}
+
+      # Set up Python for client tests
+      - name: Install Python client dependencies
+        working-directory: wave-client
+        run: |
+          uv venv
+          uv pip install -e .[test]
+
+      # Run Python integration tests
+      - name: Run Python integration tests
+        working-directory: wave-client
+        run: uv run pytest python/tests/medium/ -rs -vv
+        env:
+          WAVE_API_KEY: ${{ secrets.WAVE_API_KEY }}

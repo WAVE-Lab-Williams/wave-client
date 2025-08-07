@@ -135,47 +135,6 @@ export default class WaveClient {
     }
 
     /**
-     * Convert jsPsych trial data to WAVE format
-     * @param {Object} trialData - jsPsych trial data object
-     * @returns {Object} Formatted data for logExperimentData()
-     */
-    static fromJsPsychData(trialData) {
-        if (!trialData || typeof trialData !== 'object' || Array.isArray(trialData)) {
-            throw new ValidationError('Trial data must be an object');
-        }
-
-        // Extract common jsPsych fields and flatten structure
-        const waveData = {};
-
-        // Map common jsPsych fields to more standard names
-        const fieldMapping = {
-            rt: 'reaction_time',
-            response: 'response',
-            correct: 'correct',
-            stimulus: 'stimulus',
-            trial_type: 'trial_type',
-            trial_index: 'trial_index',
-        };
-
-        // Apply field mapping and copy other fields as-is
-        for (const [key, value] of Object.entries(trialData)) {
-            const mappedKey = fieldMapping[key] || key;
-
-            // Skip internal jsPsych fields that aren't relevant for analysis
-            if (!key.startsWith('internal_node_id') && key !== 'time_elapsed') {
-                waveData[mappedKey] = value;
-            }
-        }
-
-        // Convert reaction time from milliseconds to seconds if present
-        if (waveData.reaction_time !== undefined && typeof waveData.reaction_time === 'number') {
-            waveData.reaction_time = waveData.reaction_time / 1000; // Convert ms to seconds
-        }
-
-        return waveData;
-    }
-
-    /**
      * Make HTTP request with retry logic
      * @private
      * @param {string} method - HTTP method

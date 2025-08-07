@@ -27,6 +27,10 @@ Add this to your HTML experiment:
 </script>
 ```
 
+**Important**: Add your API key to the experiment URL:
+- `https://your-site.com/experiment.html?key=exp_abc123`
+- The client automatically extracts the key from the `?key=` parameter
+
 > **💡 Tip**: Replace `v1.0.0` with the latest version from our [releases page](https://github.com/WAVE-Lab-Williams/wave-client/releases)
 
 ## For Analyzing Data (Python)
@@ -116,6 +120,14 @@ uv pip install -e .[dev,test]
    - **For experiments**: Add `WAVE_API_KEY` and `WAVE_API_URL` to your Vercel environment variables
    - **For analysis**: Copy `.env.example` to `.env` and fill in your values
 
+## Detailed docs
+
+- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
+- [Examples](docs/examples.md) - Working examples of experiments and data analysis
+- [API Reference](docs/api-reference.md) - Complete method documentation
+- [Release Process](docs/releases.md) - How releases are created and versioned
+
+
 ## For Developers
 
 If you want to modify the clients locally, you'll need Node.js and Python:
@@ -188,14 +200,6 @@ make build-js-watch   # Build JS with auto-rebuild on changes
 # Cleanup
 make clean           # Remove build artifacts, cache files, etc.
 ```
-
-## More Help
-
-- [Installation Guide](docs/installation.md) - Detailed setup instructions for both JavaScript and Python
-- [Examples](docs/examples.md) - Working examples of experiments and data analysis
-- [API Reference](docs/api-reference.md) - Complete method documentation
-
-Need help? Contact Prof. Kim Wong.
 
 ---
 
