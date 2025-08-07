@@ -18,7 +18,7 @@ Add your API key to the URL as a query parameter: `?key=your_api_key_here`
     </div>
 
     <script type="module">
-        import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
+        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
 
         // Client automatically extracts API key from URL (?key=your_api_key)
         const client = new WaveClient();
@@ -92,7 +92,7 @@ View the example notebook in `python/examples/data_analysis_example.ipynb`
 Add to your HTML:
 ```html
 <script type="module">
-    import { WaveClient } from 'https://unpkg.com/wave-client@latest/dist/wave-client.esm.js';
+    import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
     // Your experiment code here
 </script>
 ```

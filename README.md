@@ -14,7 +14,7 @@ Add this to your HTML experiment:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
+  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
 
   const client = new WaveClient();  // Auto-extracts API key from URL ?key=exp_abc123
 
