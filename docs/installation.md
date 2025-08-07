@@ -8,7 +8,7 @@ Add this to your HTML experiment - no installation needed:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@latest/javascript/dist/wave-client.esm.js';
+  import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@latest/javascript/dist/wave-client.esm.js';
 
   const client = new WaveClient();
   // Your experiment code here
@@ -24,18 +24,18 @@ Add this to your HTML experiment - no installation needed:
 ```html
 <!-- Option 1: jsDelivr from GitHub (recommended) -->
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@latest/javascript/dist/wave-client.esm.js';
+  import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@latest/javascript/dist/wave-client.esm.js';
 </script>
 
 <!-- Option 2: Specific version (more reliable for production) -->
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
+  import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
 </script>
 
 <!-- Option 3: UMD for older browsers -->
 <script src="https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@latest/javascript/dist/wave-client.umd.js"></script>
 <script>
-  const client = new WaveClient.WaveClient();
+  const client = new WaveClient();
 </script>
 ```
 
@@ -53,7 +53,7 @@ yarn add github:WAVE-Lab-Williams/wave-client
 
 Then import in your code:
 ```javascript
-import { WaveClient } from 'wave-client-js';
+import WaveClient from 'wave-client/javascript/dist/wave-client.esm.js';
 ```
 
 **Note**: This requires the built `dist/` files to be committed to the repository. For most users, the CDN approach above is simpler.

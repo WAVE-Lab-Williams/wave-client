@@ -18,7 +18,7 @@ Add your API key to the URL as a query parameter: `?key=your_api_key_here`
     </div>
 
     <script type="module">
-        import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+        import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
 
         // Client automatically extracts API key from URL (?key=your_api_key)
         const client = new WaveClient();

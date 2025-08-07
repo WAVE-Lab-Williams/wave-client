@@ -13,6 +13,9 @@ The WAVE Client Library provides dual-language clients for psychology experiment
 *Designed for experiment data logging during browser-based experiments*
 
 ```javascript
+// Import using default export syntax
+import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
+
 // Auto-detects API key from URL (?key=exp_abc123)
 const client = new WaveClient();
 

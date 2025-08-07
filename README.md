@@ -14,7 +14,7 @@ Add this to your HTML experiment:
 
 ```html
 <script type="module">
-  import { WaveClient } from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/wave-client.esm.js';
+  import WaveClient from 'https://cdn.jsdelivr.net/gh/WAVE-Lab-Williams/wave-client@v1.0.0/javascript/dist/wave-client.esm.js';
 
   const client = new WaveClient();  // Auto-extracts API key from URL ?key=exp_abc123
 
@@ -200,6 +200,13 @@ make build-js-watch   # Build JS with auto-rebuild on changes
 # Cleanup
 make clean           # Remove build artifacts, cache files, etc.
 ```
+
+## Need Help?
+
+- **[📖 Full Documentation](docs/)** - Complete API reference and examples
+- **[🛠️ Troubleshooting Guide](docs/troubleshooting.md)** - Common issues and solutions
+- **[💡 Examples](docs/examples.md)** - Working code examples
+- **[⚙️ Installation Guide](docs/installation.md)** - Detailed setup instructions
 
 ---
 
