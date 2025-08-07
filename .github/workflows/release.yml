@@ -45,7 +45,9 @@ jobs:
       - name: Create tag
         id: tag
         if: steps.tag-exists.outputs.exists == 'false'
-        run: echo "🏷️ Will create git tag ${{ steps.package-version.outputs.version }}..."
+        run: |
+          echo "🏷️ Will create git tag ${{ steps.package-version.outputs.version }}..."
+          echo "new_tag=${{ steps.package-version.outputs.version }}" >> $GITHUB_OUTPUT
 
   build-javascript:
     name: Build JavaScript Client
