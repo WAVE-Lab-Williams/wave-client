@@ -1,5 +1,9 @@
 # WAVE Client
 
+[![Wave Client CDN](https://img.shields.io/github/v/release/WAVE-Lab-Williams/wave-client?label=Wave%20Client%20CDN&color=blue&logo=jsdelivr)](https://www.jsdelivr.com/package/gh/WAVE-Lab-Williams/wave-client)
+[![Integration Tests](https://github.com/WAVE-Lab-Williams/wave-client/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/WAVE-Lab-Williams/wave-client/actions/workflows/integration-tests.yml)
+[![Release](https://github.com/WAVE-Lab-Williams/wave-client/actions/workflows/release.yml/badge.svg)](https://github.com/WAVE-Lab-Williams/wave-client/actions/workflows/release.yml)
+
 Easy-to-use tools for running psychology experiments and analyzing your data.
 
 ## What is this?
