@@ -2,12 +2,10 @@
 
 import asyncio
 import logging
-import os
 import random
 from typing import Any, Dict, Optional
 
 import httpx
-from dotenv import load_dotenv
 from wave_client.exceptions import (
     AuthenticationError,
     AuthorizationError,
@@ -27,8 +25,8 @@ class HTTPClient:
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        base_url: Optional[str] = None,
+        api_key: str,
+        base_url: str,
         max_retries: int = 3,
         base_delay: float = 1.0,
         max_delay: float = 30.0,
@@ -36,28 +34,16 @@ class HTTPClient:
     ):
         """Initialize HTTP client.
 
-        Automatically loads environment variables from .env file for easier configuration.
-
         Args:
-            api_key: API key for authentication. If None, uses WAVE_API_KEY from .env file.
-            base_url: Base URL for API. If None, uses WAVE_API_URL from .env file
-                or defaults to localhost.
+            api_key: API key for authentication.
+            base_url: Base URL for API.
             max_retries: Maximum number of retries for failed requests.
             base_delay: Base delay in seconds for exponential backoff.
             max_delay: Maximum delay in seconds between retries.
             timeout: Request timeout in seconds.
         """
-        # Load environment variables from .env file for easier configuration
-        load_dotenv()
-
-        self.api_key = api_key or os.getenv("WAVE_API_KEY")
-        if not self.api_key:
-            raise AuthenticationError(
-                "API key is required. Set WAVE_API_KEY environment variable "
-                "or provide api_key parameter."
-            )
-
-        self.base_url = (base_url or os.getenv("WAVE_API_URL", "http://localhost:8000")).rstrip("/")
+        self.api_key = api_key
+        self.base_url = base_url.rstrip("/")
         self.max_retries = max_retries
         self.base_delay = base_delay
         self.max_delay = max_delay

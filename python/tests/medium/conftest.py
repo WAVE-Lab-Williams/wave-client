@@ -6,11 +6,7 @@ from typing import AsyncGenerator
 
 import httpx
 import pytest
-from dotenv import load_dotenv
 from wave_client import WaveClient
-
-# Load environment variables from .env file
-load_dotenv()
 
 
 @pytest.fixture(scope="session")

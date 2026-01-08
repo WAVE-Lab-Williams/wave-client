@@ -1,7 +1,5 @@
 """WAVE Client Library - Main client class."""
 
-from typing import Optional
-
 import pandas as pd
 from wave_client.resources import (
     ExperimentDataResource,
@@ -240,8 +238,8 @@ class WaveClient:
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        base_url: Optional[str] = None,
+        api_key: str,
+        base_url: str,
         max_retries: int = 3,
         base_delay: float = 1.0,
         max_delay: float = 30.0,
@@ -250,10 +248,8 @@ class WaveClient:
         """Initialize WAVE client.
 
         Args:
-            api_key: API key for authentication. If None, uses WAVE_API_KEY env var.
-                    For development, use ADMIN or TEST level API key.
-            base_url: Base URL for API. If None, uses WAVE_API_URL env var.
-                     Defaults to http://localhost:8000 for development.
+            api_key: API key for authentication.
+            base_url: Base URL for API.
             max_retries: Maximum number of retries for failed requests.
             base_delay: Base delay in seconds for exponential backoff.
             max_delay: Maximum delay in seconds between retries.
