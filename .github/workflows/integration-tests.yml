@@ -53,6 +53,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
+          enable-cache: false
 
       - name: Set up Python for backend
         run: uv python install 3.12
