@@ -1,6 +1,6 @@
 [project]
 name = "wave-client"
-version = "1.0.0"
+version = "1.1.0"
 description = "Dual-language client library (JavaScript + Python) for the WAVE Backend API"
 readme = "README.md"
 requires-python = ">=3.12"

@@ -11,11 +11,11 @@ The WAVE Client uses a fully automated release system that builds and distribute
 - **Main Branch**: Only releases from commits on the `main` branch
 
 ### Current Version
-- **JavaScript Client**: v1.0.0
-- **Python Client**: v1.0.0
+- **JavaScript Client**: v1.1.0
+- **Python Client**: v1.1.0
 
 ## Creating a New Release
-
+ 
 ### 1. Version Update
 Update the version in both configuration files:
 

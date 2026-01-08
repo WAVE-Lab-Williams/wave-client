@@ -1,6 +1,6 @@
 {
   "name": "wave-client-js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "JavaScript client for the WAVE Backend API",
   "main": "javascript/dist/wave-client.umd.js",
   "module": "javascript/dist/wave-client.esm.js",
