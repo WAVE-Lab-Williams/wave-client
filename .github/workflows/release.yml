@@ -111,6 +111,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
+          enable-cache: false
 
       - name: Set up Python
         run: |

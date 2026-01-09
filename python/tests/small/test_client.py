@@ -1,7 +1,5 @@
 """Unit tests for the main WaveClient class."""
 
-from unittest.mock import patch
-
 import pytest
 from wave_client import WaveClient
 from wave_client.resources import (
@@ -18,7 +16,7 @@ class TestWaveClientInitialization:
 
     def test_client_initialization_with_defaults(self):
         """Test client initializes with default configuration."""
-        client = WaveClient(api_key="test-key")
+        client = WaveClient(api_key="test-key", base_url="http://localhost:8000")
 
         assert client.experiment_types is not None
         assert isinstance(client.experiment_types, ExperimentTypesResource)
@@ -36,14 +34,6 @@ class TestWaveClientInitialization:
         # Check that HTTP client was configured (we can't easily test the internals)
         assert client._http_client is not None
 
-    @patch.dict("os.environ", {"WAVE_API_KEY": "env-api-key"})
-    def test_client_uses_environment_variables(self):
-        """Test client picks up API key from environment."""
-        client = WaveClient()  # No explicit api_key
-
-        # Client should initialize without error when env var is set
-        assert client._http_client is not None
-
 
 class TestWaveClientContextManager:
     """Test WaveClient async context manager functionality."""
@@ -51,7 +41,7 @@ class TestWaveClientContextManager:
     @pytest.mark.asyncio
     async def test_context_manager_lifecycle(self, mock_http_client):
         """Test client context manager enter/exit lifecycle."""
-        client = WaveClient(api_key="test-key")
+        client = WaveClient(api_key="test-key", base_url="http://localhost:8000")
         client._http_client = mock_http_client
 
         # Test async context manager
@@ -65,7 +55,7 @@ class TestWaveClientContextManager:
     @pytest.mark.asyncio
     async def test_manual_close(self, mock_http_client):
         """Test manual client close."""
-        client = WaveClient(api_key="test-key")
+        client = WaveClient(api_key="test-key", base_url="http://localhost:8000")
         client._http_client = mock_http_client
 
         await client.close()

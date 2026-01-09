@@ -44,7 +44,7 @@ def mock_http_client(mock_http_response):
 @pytest.fixture
 async def wave_client(mock_http_client):
     """Create a WAVE client with mocked HTTP client."""
-    client = WaveClient(api_key="test-api-key")
+    client = WaveClient(api_key="test-api-key", base_url="http://localhost:8000")
     client._http_client = mock_http_client
     return client
 
