@@ -96,6 +96,9 @@ class ExperimentCreate(BaseModel):
     description: str = Field(..., description="Experiment description")
     tags: List[str] = Field(default_factory=list, max_length=10, description="Tags (max 10)")
     additional_data: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    config: Dict[str, Any] = Field(
+        default_factory=dict, description="Experiment hyperparameters (free-form)"
+    )
 
 
 class ExperimentUpdate(BaseModel):
@@ -104,6 +107,9 @@ class ExperimentUpdate(BaseModel):
     description: Optional[str] = Field(None, description="Experiment description")
     tags: Optional[List[str]] = Field(None, max_length=10, description="Tags (max 10)")
     additional_data: Optional[Dict[str, Any]] = Field(None, description="Additional metadata")
+    config: Optional[Dict[str, Any]] = Field(
+        None, description="Experiment hyperparameters (free-form); replaces stored config"
+    )
 
 
 class Experiment(BaseModel):
@@ -116,6 +122,7 @@ class Experiment(BaseModel):
     description: str
     tags: List[str] = Field(default_factory=list)
     additional_data: Dict[str, Any] = Field(default_factory=dict)
+    config: Dict[str, Any] = Field(default_factory=dict)
     created_at: datetime
     updated_at: datetime
     experiment_type: ExperimentType  # Nested model

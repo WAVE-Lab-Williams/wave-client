@@ -38,7 +38,7 @@ describe('WaveClient Constructor', () => {
         expect(customClient.maxRetries).toBe(3);
         expect(customClient.baseDelay).toBe(2000);
         expect(customClient.maxDelay).toBe(60000);
-        expect(customClient.clientVersion).toBe('1.0.0');
+        expect(customClient.clientVersion).toBe('1.2.0');
     });
 
     test('should use default configuration when options not provided', () => {

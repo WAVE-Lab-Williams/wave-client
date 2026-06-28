@@ -70,7 +70,7 @@ export default class WaveClient {
         this.maxDelay = options.maxDelay || 30000;
 
         // Client version for compatibility checking
-        this.clientVersion = '1.0.0';
+        this.clientVersion = '1.2.0';
 
         // Validate API key is present
         if (!this.apiKey) {
@@ -124,6 +124,28 @@ export default class WaveClient {
      */
     async getVersion() {
         return await this._makeRequest('GET', '/version');
+    }
+
+    /**
+     * Fetch an experiment's runtime config (free-form hyperparameters).
+     *
+     * Readable with an experimentee-level key, so a browser experiment can pull
+     * its own tunable parameters at startup and merge them over in-code defaults.
+     * Returns the narrow config payload only (never the full experiment record).
+     *
+     * @param {string} experimentId - Experiment UUID
+     * @returns {Promise<{experiment_uuid: string, config: Object}>} Config payload
+     *   (`config` is `{}` when none has been set).
+     *
+     * @example
+     * const { config } = await client.getExperimentConfig(experimentId);
+     * const resolved = { ...DEFAULTS, ...config };
+     */
+    async getExperimentConfig(experimentId) {
+        if (!experimentId) {
+            throw new ValidationError('experimentId is required');
+        }
+        return await this._makeRequest('GET', `/api/v1/experiments/${experimentId}/config`);
     }
 
     /**
