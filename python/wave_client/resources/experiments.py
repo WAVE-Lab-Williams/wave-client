@@ -16,6 +16,7 @@ class ExperimentsResource(BaseResource):
         description: str,
         tags: Optional[List[str]] = None,
         additional_data: Optional[Dict[str, Any]] = None,
+        config: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Create a new experiment.
 
@@ -24,6 +25,7 @@ class ExperimentsResource(BaseResource):
             description: Experiment description.
             tags: List of tags (max 10).
             additional_data: Additional metadata.
+            config: Experiment hyperparameters (free-form) the frontend pulls at runtime.
 
         Returns:
             Created experiment response.
@@ -34,6 +36,7 @@ class ExperimentsResource(BaseResource):
             description=description,
             tags=tags or [],
             additional_data=additional_data or {},
+            config=config or {},
         )
 
         return await self._request(
@@ -92,6 +95,7 @@ class ExperimentsResource(BaseResource):
         description: Optional[str] = None,
         tags: Optional[List[str]] = None,
         additional_data: Optional[Dict[str, Any]] = None,
+        config: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Update experiment.
 
@@ -100,6 +104,7 @@ class ExperimentsResource(BaseResource):
             description: Experiment description.
             tags: List of tags (max 10).
             additional_data: Additional metadata.
+            config: Experiment hyperparameters (free-form); replaces stored config.
 
         Returns:
             Updated experiment response.
@@ -109,12 +114,40 @@ class ExperimentsResource(BaseResource):
             description=description,
             tags=tags,
             additional_data=additional_data,
+            config=config,
         )
 
         return await self._request(
             "PUT",
             f"/api/v1/experiments/{experiment_uuid}",
             json_data=validated_data.model_dump(exclude_none=True),
+        )
+
+    async def get_config(self, experiment_uuid: str) -> Dict[str, Any]:
+        """Get an experiment's runtime config (hyperparameters).
+
+        Args:
+            experiment_uuid: Experiment UUID.
+
+        Returns:
+            Narrow config payload: ``{"experiment_uuid": ..., "config": {...}}``.
+        """
+        return await self._request("GET", f"/api/v1/experiments/{experiment_uuid}/config")
+
+    async def set_config(self, experiment_uuid: str, config: Dict[str, Any]) -> Dict[str, Any]:
+        """Replace an experiment's runtime config (requires RESEARCHER role).
+
+        Args:
+            experiment_uuid: Experiment UUID.
+            config: Free-form hyperparameters; replaces the stored config entirely.
+
+        Returns:
+            Narrow config payload with the updated config.
+        """
+        return await self._request(
+            "PUT",
+            f"/api/v1/experiments/{experiment_uuid}/config",
+            json_data={"config": config},
         )
 
     async def delete(self, experiment_uuid: str) -> Dict[str, Any]:
